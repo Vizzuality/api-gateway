@@ -18,8 +18,14 @@ class RegisterRouter {
 
   static * register(){
       logger.info('Registering service', this.request.body);
-      var service = yield new Service(this.request.body).save();
-      this.body = service;
+      var exist = yield Service.findOne({url: this.request.body.url, method: this.request.body.method});
+      logger.debug(exist);
+      if(!exist){
+          var service = yield new Service(this.request.body).save();
+          this.body = service;
+      } else {
+          this.throw(400, 'Duplicated service');
+      }
   }
   static * unregister(){
       logger.info('Unregistering service ', this.params.id);
