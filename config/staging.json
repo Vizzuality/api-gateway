@@ -1,0 +1,14 @@
+{
+    "logger": {
+        "name": "API-Gateway-STAGING",
+        "level": "debug",
+        "toFile": false,
+        "dirLogFile": null
+    },
+    "server": {
+        "port": 8000
+    },
+    "mongodb":{
+        "uri": null
+    }
+}
