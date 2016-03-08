@@ -56,7 +56,7 @@ class RegisterRouter {
   }
 
   static * unregisterAll(){
-      logger.info('Unregistering all services ');
+      logger.info('Unregistering all services');
       var remove = yield Service.remove({}).exec();
       logger.debug(remove);
       this.body = remove;
