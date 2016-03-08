@@ -41,7 +41,7 @@ var onDbReady = function (err) {
     }
 
     //load endpoints and load validate only for /gateway
-    app.use(mount('/gateway', require('koa-bodyparser')()));
+    app.use(require('koa-bodyparser')());
     app.use(mount('/gateway', require('koa-validate')()));
     app.use(mount('/gateway', require('routes/gateway/serviceRouter').middleware()));
     app.use(require('routes/dispatcherRouter').middleware());

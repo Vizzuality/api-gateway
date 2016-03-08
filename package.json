@@ -33,6 +33,8 @@
     "koa-router": "5.4.0",
     "koa-validate": "0.2.11",
     "mongoose": "4.4.6",
+    "mongoose-regexp": "0.0.1",
+    "path-to-regexp": "1.2.1",
     "thunks": "4.1.3",
     "url": "0.11.0"
   },
