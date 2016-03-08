@@ -5,10 +5,9 @@ class ServiceValidator {
 
     static * register(next) {
         logger.debug('Validate register service');
+        this.checkBody('id').notEmpty();
         this.checkBody('name').notEmpty();
-        this.checkBody('url').notEmpty();
-        this.checkBody('method').notEmpty();
-        this.checkBody('endpoints').notEmpty();
+        this.checkBody('urls').notEmpty();
         if(this.errors) {
             logger.debug('errors ', this.errors);
             this.body = this.errors;

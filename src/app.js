@@ -21,6 +21,19 @@ var onDbReady = function (err) {
     }
 
     if(process.env.BASIC_AUTH && process.env.BASIC_AUTH === 'on'){
+        app.use(function* (next) {
+            try {
+                yield next;
+            } catch(err) {
+                if(401 === err.status) {
+                    this.status = 401;
+                    this.set('WWW-Authenticate', 'Basic');
+                    this.body = 'Not authorized';
+                } else {
+                    throw err;
+                }
+            }
+        });
         app.use(mount('/gateway', auth({
             name: process.env.BASIC_AUTH_USERNAME,
             pass: process.env.BASIC_AUTH_PASSWORD

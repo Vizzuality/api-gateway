@@ -16,15 +16,37 @@ class RegisterRouter {
     this.body = yield Service.find({}, {'__v': 0, 'endpoints._id': 0}).exec();
   }
 
+  static * createServices(data){
+      logger.info('Saving services');
+      let services = [];
+      if(data && data.urls){
+          for(let i= 0, length = data.urls.length; i < length; i++){
+              services.push( yield new Service({
+                  id: data.id,
+                  name: data.name,
+                  url: data.urls[i].url,
+                  method: data.urls[i].method,
+                  endpoints: data.urls[i].endpoints,
+              }).save());
+          }
+      }
+      return services;
+  }
+
   static * register(){
       logger.info('Registering service', this.request.body);
-      var exist = yield Service.findOne({url: this.request.body.url, method: this.request.body.method});
-      logger.debug(exist);
-      if(!exist){
-          var service = yield new Service(this.request.body).save();
-          this.body = service;
+      var exist = yield Service.find({id: this.request.body.id}).exec();
+
+      if(!exist || exist.length === 0){
+          var services = yield RegisterRouter.createServices(this.request.body);
+
+          this.body = services;
       } else {
-          this.throw(400, 'Duplicated service');
+          logger.debug('Service exist. Remove olds...');
+          yield Service.find({id: this.request.body.id}).remove().exec();
+          logger.debug('Remove correct.');
+          var services = yield RegisterRouter.createServices(this.request.body);
+          this.body = services;
       }
   }
   static * unregister(){
