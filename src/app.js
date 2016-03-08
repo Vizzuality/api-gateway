@@ -51,6 +51,7 @@ var onDbReady = function (err) {
     var port = process.env.PORT || config.get('server.port');
 
     server.listen(port);
+    logger.debug('NUEVO LOG');
     logger.info('API Gateway started in port:' + port);
 };
 
