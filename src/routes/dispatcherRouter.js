@@ -5,47 +5,65 @@ var logger = require('logger');
 var request = require('co-request');
 var url = require('url');
 var Service = require('models/service');
-
+var pathToRegexp = require('path-to-regexp');
 
 var router = new Router({});
 
 
 class DispatcherRouter {
 
+    static * buildUrl(sourceUrl, targetUrl, service) {
+        logger.debug('Building url');
+        var result = service.urlRegex.exec(sourceUrl);
+        let keys = {};
+        service.keys.map(function(key, i){
+            keys[key] = result[i + 1];
+        });
+        let toPath = pathToRegexp.compile(targetUrl);
+        let buildUrl = toPath(keys);
+        logger.debug('Final url ' + buildUrl);
+        return buildUrl;
+    }
+
     static * dispatch() {
         logger.info('Dispatch url', this.request.url, ' and method ', this.request.method);
         var parsedUrl = url.parse(this.request.url);
-        logger.info({
-            url: parsedUrl.pathname,
-            method: this.request.method
-        });
         var service = yield Service.findOne({
-            url: parsedUrl.pathname,
+            $where: 'this.urlRegex && this.urlRegex.test(\'' + parsedUrl.pathname + '\')',
             method: this.request.method
         });
+
         if(service && service.endpoints) {
             let requests = [];
+            let origRequest = this.request;
 
-            service.endpoints.forEach(function (endpoint) {
-                logger.debug('Dispathing request from %s to %s private endpoint. Type: %s', parsedUrl.pathname, endpoint.url, endpoint.type);
-                //TODO add suport POST, PATCH, DELETE,
-                requests.push(request({
-                    uri: endpoint.url,
-                    method: endpoint.method
-                }));
-            });
+            for(let i = 0, length = service.endpoints.length; i < length; i++){
+                let endpoint = service.endpoints[i];
+                logger.info('Dispathing request from %s to %s%s private endpoint. Type: %s', parsedUrl.pathname, endpoint.baseUrl, endpoint.path, endpoint.type);
+
+                let url = yield DispatcherRouter.buildUrl(parsedUrl.pathname, endpoint.path, service);
+                let configRequest = {
+                    uri: endpoint.baseUrl + url,
+                    method: endpoint.method,
+                    json: true
+                };
+                if(endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT'){
+                    configRequest.body = origRequest.body;
+                }
+                requests.push(request(configRequest));
+            }
             //TODO: add support several responses
-            try{
+            try {
                 var result = yield requests;
-                logger.debug(result[0]);
-                this.body = JSON.parse(result[0].body);
-                this.response.type= result[0].headers['content-type'];
-            } catch(e){
+
+                this.body = result[0].body;
+                this.response.type = result[0].headers['content-type'];
+            } catch(e) {
                 logger.error(e);
                 this.throw(500, 'Unexpected error');
             }
 
-        } else {
+        } else  {
             this.throw(404, 'Endpoint not found');
         }
     }
