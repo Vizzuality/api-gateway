@@ -51,7 +51,7 @@ class RegisterRouter {
   }
   static * unregister(){
       logger.info('Unregistering service ', this.params.id);
-      var remove = yield Service.findById(this.params.id).remove().exec();
+      var remove = yield Service.find({id: this.params.id}).remove().exec();
       this.body = remove.ok;
   }
 
