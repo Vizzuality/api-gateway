@@ -17,15 +17,15 @@ module.exports = function (grunt) {
                 },
                 globals: {}
             },
-            jsTest: {
-                src: [
-                    'test/**/*.js'
-                ],
-                options: {
-                    jshintrc: true
-                },
-                globals: {}
-            }
+            // jsTest: {
+            //     src: [
+            //         'test/**/*.js'
+            //     ],
+            //     options: {
+            //         jshintrc: true
+            //     },
+            //     globals: {}
+            // }
         },
         express: {
             dev: {
