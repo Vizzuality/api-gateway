@@ -36,22 +36,22 @@ class RegisterRouter {
   static * register(){
       logger.info('Registering service', this.request.body);
       var exist = yield Service.find({id: this.request.body.id}).exec();
-
+      var services = null;
       if(!exist || exist.length === 0){
-          var services = yield RegisterRouter.createServices(this.request.body);
+          services = yield RegisterRouter.createServices(this.request.body);
 
           this.body = services;
       } else {
           logger.debug('Service exist. Remove olds...');
           yield Service.find({id: this.request.body.id}).remove().exec();
           logger.debug('Remove correct.');
-          var services = yield RegisterRouter.createServices(this.request.body);
+          services = yield RegisterRouter.createServices(this.request.body);
           this.body = services;
       }
   }
   static * unregister(){
       logger.info('Unregistering service ', this.params.id);
-      var remove = yield Service.findById(this.params.id).remove().exec();
+      var remove = yield Service.find({id: this.params.id}).remove().exec();
       this.body = remove.ok;
   }
 
