@@ -30,7 +30,9 @@ class DispatcherRouter {
                 return request(requestConfig);
             });
             let result = yield requests;
+            logger.debug(result);
             this.body = result[0].body;
+
             this.response.type = result[0].headers['content-type'];
         } catch(e) {
             logger.error(e);
