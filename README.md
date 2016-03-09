@@ -75,6 +75,7 @@ The id must be unique by microservice and version
 
 ## Unregister service
 To register service do DELETE request to /gateway/service/<idService>
+If possible remove all service, if you do request to /gateway/service/all
 
 ## Get services
 To obtain json with the services registered, you do GET request to: /gateway/service.
