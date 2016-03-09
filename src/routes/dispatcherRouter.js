@@ -15,22 +15,20 @@ class DispatcherRouter {
     static * dispatch() {
         logger.info('Dispatch url', this.request.url, ' and method ', this.request.method);
         let requests = null;
-        try{
+        try {
             requests = yield DispatcherService.getRequests(this.request.url, this.request.method, this.request.body);
-        } catch(e){
+        } catch(e) {
             logger.error(e);
-            if(e instanceof ServiceNotFound){
+            if(e instanceof ServiceNotFound) {
                 this.throw(404, 'Endpoint not found');
             } else {
                 this.throw(500, 'Unexpected error');
             }
         }
         try {
-            if(requests){
-                requests = requests.map(function(requestConfig, i){
-                    return request(requestConfig);
-                })
-            }
+            requests = requests.map(function (requestConfig, i) {
+                return request(requestConfig);
+            });
             let result = yield requests;
             this.body = result[0].body;
             this.response.type = result[0].headers['content-type'];
