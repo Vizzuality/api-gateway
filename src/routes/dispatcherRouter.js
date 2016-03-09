@@ -23,9 +23,14 @@ class DispatcherRouter {
                 this.throw(404, 'Endpoint not found');
             } else {
                 this.throw(500, 'Unexpected error');
-            }            
+            }
         }
         try {
+            if(requests){
+                requests = requests.map(function(requestConfig, i){
+                    return request(requestConfig);
+                })
+            }
             let result = yield requests;
             this.body = result[0].body;
             this.response.type = result[0].headers['content-type'];

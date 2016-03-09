@@ -40,6 +40,20 @@ var onDbReady = function (err) {
         })));
     }
 
+    //catch errors and send in jsonapi standard. Always return vnd.api+json
+    app.use(function* (next) {
+        try {
+            yield next;
+        } catch(err) {
+            this.status = err.status || 500;
+            this.body = ErrorSerializer.serializeError(this.status, err.message );
+            if(process.env.NODE_ENV !== 'dev' && this.status === 500 ){
+                this.body = 'Unexpected error';
+            }
+        }
+        this.response.type = 'application/vnd.api+json';
+    });
+
     //load endpoints and load validate only for /gateway
     app.use(require('koa-bodyparser')());
     app.use(mount('/gateway', require('koa-validate')()));
