@@ -31,9 +31,13 @@ class DispatcherRouter {
             });
             let result = yield requests;
             logger.debug(result);
+            if(result[0].statusCode === 404){
+                this.throw(404, 'Endpoint not found');
+                return;
+            }
             this.body = result[0].body;
-
             this.response.type = result[0].headers['content-type'];
+
         } catch(e) {
             logger.error(e);
             this.throw(500, 'Unexpected error');
