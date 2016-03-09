@@ -7,6 +7,7 @@ var auth = require('koa-basic-auth');
 var mount = require('koa-mount');
 var koa = require('koa');
 var app = koa();
+var ErrorSerializer = require('serializers/errorSerializer');
 
 var onDbReady = function (err) {
     if(err) {
