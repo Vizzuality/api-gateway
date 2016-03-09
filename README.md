@@ -8,6 +8,7 @@ npm install
 
 npm install -g bunyan  // logger system
 ```
+Is necessary install mongodb and you set the url in file config by your environment.
 
 ## Run
 Execute the next command: (Environment available: dev, test, staging, prod)
