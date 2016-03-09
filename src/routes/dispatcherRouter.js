@@ -30,11 +30,7 @@ class DispatcherRouter {
                 return request(requestConfig);
             });
             let result = yield requests;
-            logger.debug(result);
-            if(result[0].statusCode === 404){
-                this.throw(404, 'Endpoint not found');
-                return;
-            }
+            this.status = result[0].statusCode;
             this.body = result[0].body;
             this.response.type = result[0].headers['content-type'];
 

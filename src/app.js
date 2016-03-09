@@ -48,9 +48,9 @@ var onDbReady = function (err) {
         } catch(err) {
             this.status = err.status || 500;
             this.body = ErrorSerializer.serializeError(this.status, err.message );
-            // if(process.env.NODE_ENV !== 'dev' && this.status === 500 ){
-            //     this.body = 'Unexpected error';
-            // }
+            if(process.env.NODE_ENV === 'prod' && this.status === 500 ){
+                this.body = 'Unexpected error';
+            }
         }
         this.response.type = 'application/vnd.api+json';
     });
