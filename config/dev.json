@@ -10,5 +10,8 @@
     },
     "mongodb":{
         "uri": "mongodb://192.168.99.100:32768/api_gateway_db"
+    },
+    "oldAPI":{
+        "url":"https://testingadrianapi-dot-gfw-apis.appspot.com"
     }
 }

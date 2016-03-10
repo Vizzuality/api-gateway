@@ -51,8 +51,9 @@ var onDbReady = function (err) {
             if(process.env.NODE_ENV === 'prod' && this.status === 500 ){
                 this.body = 'Unexpected error';
             }
+            this.response.type = 'application/vnd.api+json';
         }
-        this.response.type = 'application/vnd.api+json';
+
     });
 
     //load endpoints and load validate only for /gateway
