@@ -23,7 +23,7 @@ class DispatcherService {
         return buildUrl;
     }
 
-    static * getRequests(sourceUrl, sourceMethod, body){
+    static * getRequests(sourceUrl, sourceMethod, body, headers){
         logger.debug('Obtaining config request');
         var requests = [];
         var parsedUrl = url.parse(sourceUrl);
@@ -53,14 +53,19 @@ class DispatcherService {
             }
             return requests;
         } else  {
+
             logger.debug('Redirect to old API');
             configRequest = {
                 uri: config.get('oldAPI.url') + sourceUrl,
                 method: sourceMethod,
                 json:true
             };
+            if(headers){
+                logger.debug('Adding headers');
+                configRequest.headers = headers;
+            }
             logger.debug('Create request to %s', config.get('oldAPI.url') + sourceUrl);
-            if(configRequest.method === 'POST' && configRequest.method === 'PATCH' &&configRequest.method === 'PUT'){
+            if(configRequest.method === 'POST' || configRequest.method === 'PATCH' || configRequest.method === 'PUT'){
                 logger.debug('Method is %s. Adding body', configRequest.method);
                 configRequest.body = body;
             }
