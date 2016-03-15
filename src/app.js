@@ -3,7 +3,7 @@ var config = require('config');
 var logger = require('logger');
 var mongoose = require('mongoose');
 
-var mongoUri = 'mongodb://' + config.get('mongodb.host') + ':' + config.get('mongodb.port') + '/' + config.get('mongodb.database');
+var mongoUri = process.env.MONGOLAB_URI || 'mongodb://' + config.get('mongodb.host') + ':' + config.get('mongodb.port') + '/' + config.get('mongodb.database');
 
 var auth = require('koa-basic-auth');
 var mount = require('koa-mount');
