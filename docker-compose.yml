@@ -23,8 +23,8 @@ test:
     file: base.yml
     service: base
   container_name: api-gateway-test
-  command: bash -c 'npm install; npm test'
-  
+  command: bash -c 'sudo npm install; npm test'
+
 web:
   extends:
     file: base.yml
