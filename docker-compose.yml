@@ -7,7 +7,7 @@ develop:
   container_name: api-gateway-develop
   # environment:
   #   NODE_ENV: dev
-  command: bash -c 'npm run develop'
+  command: bash -c 'npm install; npm run develop'
   links:
     - mongo
 start-dev:
@@ -15,7 +15,7 @@ start-dev:
     file: base.yml
     service: base
   container_name: api-gateway-start-dev
-  command: bash -c 'npm run startDev'
+  command: bash -c 'npm install; npm run startDev'
   links:
     - mongo
 test:
@@ -23,12 +23,13 @@ test:
     file: base.yml
     service: base
   container_name: api-gateway-test
-  command: bash -c 'npm test'
+  command: bash -c 'npm install; npm test'
+  
 web:
   extends:
     file: base.yml
     service: base
-  command: bash -c 'npm start'
+  command: bash -c 'npm install; npm start'
   links:
     - mongo
 

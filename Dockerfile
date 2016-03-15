@@ -5,7 +5,7 @@ WORKDIR /home/api-gateway
 ADD . /home/api-gateway
 #RUN npm update -g npm
 
-RUN npm install
+# RUN npm install
 
 # Tell Docker we are going to use this port
 EXPOSE 8000
