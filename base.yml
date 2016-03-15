@@ -1,0 +1,7 @@
+base:
+  build: .
+  ports:
+    - "80:8000"
+  container_name: api-gateway
+  volumes:
+    - ".:/home/api-gateway"

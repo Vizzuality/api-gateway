@@ -1,0 +1,6 @@
+{
+    "mongodb":{
+        "host": "MONGO_PORT_27017_TCP_ADDR",
+        "port": "MONGO_PORT_27017_TCP_PORT"
+    }
+}
