@@ -10,5 +10,8 @@
     },
     "mongodb":{
         "uri": null
+    },
+    "oldAPI":{
+        "url":"https://testingadrianapi-dot-gfw-apis.appspot.com"
     }
 }

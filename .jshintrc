@@ -24,10 +24,11 @@
     "module": false,
     "yield": false,
     "require": false,
-    "window": false,
-    "document": false,
-    "L": false,
-    "$": false,
-    "angular": false
+    "describe": false,
+    "before": false,
+    "after": false,
+    "it": false,
+    "beforeEach": false,
+    "afterEach": false
   }
 }

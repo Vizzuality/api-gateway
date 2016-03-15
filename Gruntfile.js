@@ -17,15 +17,15 @@ module.exports = function (grunt) {
                 },
                 globals: {}
             },
-            // jsTest: {
-            //     src: [
-            //         'test/**/*.js'
-            //     ],
-            //     options: {
-            //         jshintrc: true
-            //     },
-            //     globals: {}
-            // }
+            jsTest: {
+                src: [
+                    'test/**/*.js'
+                ],
+                options: {
+                    jshintrc: true
+                },
+                globals: {}
+            }
         },
         express: {
             dev: {
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                     reporter: 'spec',
                     quiet: false, // Optionally suppress output to standard out (defaults to false)
                     clearRequireCache: true, // Optionally clear the require cache before running tests (defaults to false)
-
+                    require: 'co-mocha'
                 },
                 src: ['test/unit/**/*.test.js']
             },

@@ -25,6 +25,7 @@
     "bunyan": "1.7.1",
     "co-request": "1.0.0",
     "config": "1.19.0",
+    "jsonapi-serializer": "2.1.1",
     "koa": "1.2.0",
     "koa-basic-auth": "1.1.2",
     "koa-bodyparser": "2.0.1",
@@ -35,10 +36,12 @@
     "mongoose": "4.4.6",
     "mongoose-regexp": "0.0.1",
     "path-to-regexp": "1.2.1",
+    "slug": "0.9.1",
     "thunks": "4.1.3",
     "url": "0.11.0"
   },
   "devDependencies": {
+    "co-mocha": "1.1.2",
     "grunt": "0.4.5",
     "grunt-apidoc": "0.10.1",
     "grunt-cli": "0.1.13",
@@ -50,8 +53,10 @@
     "grunt-notify": "0.4.3",
     "load-grunt-tasks": "3.4.0",
     "mocha": "2.4.5",
+    "mockery": "1.4.1",
     "should": "8.2.2",
     "should-http": "0.0.4",
+    "sinon": "1.17.3",
     "supertest": "1.2.0"
   }
 }
