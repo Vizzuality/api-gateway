@@ -4,9 +4,8 @@ node_js:
 services:
   - docker
 before_install:
-  - docker-compose build test
   - docker-compose up test
-  - docker run test npm test
+  - docker-compose run test npm test
 script:
   - npm test
 # deploy:
