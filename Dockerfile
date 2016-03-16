@@ -2,14 +2,14 @@ FROM node:latest
 MAINTAINER raul.requero@vizzuality.com
 
 WORKDIR /home/api-gateway
-ADD . /home/api-gateway
-#RUN npm update -g npm
+COPY . /home/api-gateway
 
-# RUN npm install
+RUN npm install
 
-# Tell Docker we are going to use this port
-EXPOSE 8000
-EXPOSE 35729
+COPY ./entrypoint.sh /
+# Tell Docker we are going to use this ports
+EXPOSE 8000 35729
 
+ENTRYPOINT ["/entrypoint.sh"]
 # The command to run our app when the container is run
 # CMD ["npm", "run", "develop"]

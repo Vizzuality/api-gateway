@@ -1,12 +1,9 @@
-web:
+test:
   extends:
     file: base.yml
     service: base
-  command: start
-  environment:
-    NODE_ENV: prod
-  links:
-    - mongo
+  container_name: api-gateway-test
+  command: test
 
 mongo:
   image: mongo

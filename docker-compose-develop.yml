@@ -1,10 +1,13 @@
-web:
+develop:
   extends:
     file: base.yml
     service: base
-  command: start
-  environment:
-    NODE_ENV: prod
+  ports:
+    - "35729:35729"
+  container_name: api-gateway-develop
+  # environment:
+  #   NODE_ENV: dev
+  command: develop
   links:
     - mongo
 
