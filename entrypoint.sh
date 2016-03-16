@@ -2,7 +2,9 @@
 set -e
 
 # npm install
-
+ls -la
+echo "----------------------------------------------------------------------------------------------------------------"
+ls -la /tmp
 if [ "$1" = 'develop' ]; then
   echo "Running Development Server"
   exec npm run develop

@@ -11,7 +11,7 @@ develop:
   links:
     - mongo
   volumes:
-    - .:/home/api-gateway
+    - .:/opt/project/api-gateway
 
 mongo:
   image: mongo
