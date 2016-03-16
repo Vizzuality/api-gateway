@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+# npm install
+
 if [ "$1" = 'develop' ]; then
   echo "Running Development Server"
   exec npm run develop

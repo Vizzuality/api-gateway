@@ -10,6 +10,8 @@ develop:
   command: develop
   links:
     - mongo
+  volumes:
+    - .:/home/api-gateway
 
 mongo:
   image: mongo
