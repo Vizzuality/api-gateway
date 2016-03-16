@@ -13,4 +13,6 @@ elif [ "$1" = 'test' ]; then
 elif [ "$1" = 'start' ]; then
   echo "Running Start"
   exec npm start
+else
+  exec "$@"
 fi
