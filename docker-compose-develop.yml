@@ -3,7 +3,7 @@ develop:
     file: base.yml
     service: base
   ports:
-    - "35729:35729"
+    - "8000"
   container_name: api-gateway-develop
   environment:
     NODE_ENV: dev

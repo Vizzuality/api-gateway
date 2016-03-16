@@ -3,9 +3,9 @@ MAINTAINER raul.requero@vizzuality.com
 
 RUN groupadd -r apigateway && useradd -r -g apigateway apigateway
 
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /opt/api-gateway/src && cp /tmp/package.json /opt/api-gateway/package.json && cp -a /tmp/node_modules /opt/api-gateway/node_modules
+RUN mkdir -p /opt/api-gateway
+ADD package.json /opt/api-gateway/package.json
+RUN cd /opt/api-gateway && npm install
 
 COPY .jshintrc /opt/api-gateway/.jshintrc
 COPY Gruntfile.js /opt/api-gateway/Gruntfile.js
@@ -19,7 +19,7 @@ ADD ./test /opt/api-gateway/test
 ADD ./config /opt/api-gateway/config
 
 # Tell Docker we are going to use this ports
-EXPOSE 8000 35729
+EXPOSE 8000
 # USER apigateway
 
 ENTRYPOINT ["./entrypoint.sh"]
