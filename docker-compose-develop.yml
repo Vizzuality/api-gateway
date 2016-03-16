@@ -5,13 +5,15 @@ develop:
   ports:
     - "35729:35729"
   container_name: api-gateway-develop
-  # environment:
-  #   NODE_ENV: dev
+  environment:
+    NODE_ENV: dev
   command: develop
   links:
     - mongo
   volumes:
-    - .:/opt/project/api-gateway
+    - ./src:/opt/api-gateway/src
+    - ./test:/opt/api-gateway/test
+    - ./config:/opt/api-gateway/config
 
 mongo:
   image: mongo

@@ -4,7 +4,8 @@ set -e
 # npm install
 ls -la
 echo "----------------------------------------------------------------------------------------------------------------"
-ls -la /tmp
+# ls -la ../node_modules
+
 if [ "$1" = 'develop' ]; then
   echo "Running Development Server"
   exec npm run develop

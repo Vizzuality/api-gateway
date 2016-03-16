@@ -4,7 +4,9 @@ web:
     service: base
   command: start
   environment:
-    NODE_ENV: prod
+    NODE_ENV: staging
+  ports:
+    - "8000"
   links:
     - mongo
 

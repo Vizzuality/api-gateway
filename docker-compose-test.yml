@@ -4,7 +4,11 @@ test:
     service: base
   container_name: api-gateway-test
   command: test
-
+  environment:
+    NODE_PATH: /opt/project/node_modules
+  ports:
+    - "35728:35729"
+    - "8000:8000"
 mongo:
   image: mongo
   container_name: api-gateway-mongo

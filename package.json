@@ -11,6 +11,7 @@
     "startDev": "NODE_PATH=src NODE_ENV=dev node index | bunyan",
     "start": "NODE_PATH=src node index"
   },
+
   "keywords": [
     "api-gateway",
     "microservices",
