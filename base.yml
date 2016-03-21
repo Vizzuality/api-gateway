@@ -1,0 +1,8 @@
+base:
+  build: .
+  ports:
+    - "8000:8000"
+  container_name: api-gateway
+  environment:
+    NODE_PATH: app/src
+    PORT: 8000

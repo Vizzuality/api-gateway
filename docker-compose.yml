@@ -1,0 +1,21 @@
+web:
+  extends:
+    file: base.yml
+    service: base
+  command: start
+  environment:
+    NODE_ENV: staging
+  links:
+    - mongo
+
+mongo:
+  image: mongo
+  container_name: api-gateway-mongo
+  command: --smallfiles
+  ports:
+    - "27017"
+  volumes:
+    # in osx the host machine volume directory cannot be under /Users
+    # http://stackoverflow.hex1.ru/questions/34390220/how-to-mount-external-volume-for-mongodb-using-docker-compose-and-docker-machine
+    - /var/docker/data/mongodb:/data/db
+  restart: always

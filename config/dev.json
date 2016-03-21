@@ -9,7 +9,10 @@
         "port": 8000
     },
     "mongodb":{
-        "uri": "mongodb://192.168.99.100:32768/api_gateway_db"
+        "uri": "mongodb://192.168.99.100:32768/api_gateway_db",
+        "database": "api_gateway_db",
+        "host": "192.168.99.100",
+        "port": 32768
     },
     "oldAPI":{
         "url":"https://testingadrianapi-dot-gfw-apis.appspot.com"
