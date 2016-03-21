@@ -4,6 +4,8 @@ test:
     service: base
   container_name: api-gateway-test
   command: test
+  environment:
+    NODE_ENV: test
 mongo:
   image: mongo
   container_name: api-gateway-mongo
