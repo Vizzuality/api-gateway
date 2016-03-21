@@ -1,16 +1,18 @@
 'use strict';
+
 module.exports = function (grunt) {
 
+    grunt.file.setBase('..');
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+
 
         clean: {},
         jshint: {
             js: {
                 src: [
-                    'src/**/*.js'
+                    'app/src/**/*.js'
                 ],
                 options: {
                     jshintrc: true
@@ -19,7 +21,7 @@ module.exports = function (grunt) {
             },
             jsTest: {
                 src: [
-                    'test/**/*.js'
+                    'app/test/**/*.js'
                 ],
                 options: {
                     jshintrc: true
@@ -30,9 +32,9 @@ module.exports = function (grunt) {
         express: {
             dev: {
                 options: {
-                    script: 'index.js',
+                    script: 'app/index.js',
                     'node_env': 'dev',
-                    port: 8000,
+                    port: process.env.PORT,
                     output: 'started'
                 }
             }
@@ -46,7 +48,7 @@ module.exports = function (grunt) {
                     clearRequireCache: true, // Optionally clear the require cache before running tests (defaults to false)
                     require: 'co-mocha'
                 },
-                src: ['test/unit/**/*.test.js']
+                src: ['app/test/unit/**/*.test.js']
             },
             e2e: {
                 options: {
@@ -55,7 +57,7 @@ module.exports = function (grunt) {
                     clearRequireCache: true, // Optionally clear the require cache before running tests (defaults to false)
 
                 },
-                src: ['test/e2e/**/*.spec.js']
+                src: ['app/test/e2e/**/*.spec.js']
             }
         },
         watch: {
@@ -64,7 +66,7 @@ module.exports = function (grunt) {
             },
             jssrc: {
                 files: [
-                    'src/**/*.js',
+                    'app/src/**/*.js',
                 ],
                 tasks: ['jshint:js', 'mochaTest:unit', 'express:dev'],
                 options: {
@@ -73,7 +75,7 @@ module.exports = function (grunt) {
             },
             unitTest: {
                 files: [
-                    'test/unit/**/*.test.js',
+                    'app/test/unit/**/*.test.js',
                 ],
                 tasks: ['jshint:jsTest', 'mochaTest:unit'],
                 options: {
@@ -82,7 +84,7 @@ module.exports = function (grunt) {
             },
             e2eTest: {
                 files: [
-                    'test/unit/**/*.spec.js',
+                    'app/test/unit/**/*.spec.js',
                 ],
                 tasks: ['jshint:jsTest', 'mochaTest:e2e'],
                 options: {

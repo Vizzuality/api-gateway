@@ -44,7 +44,7 @@ class RegisterRouter {
         var remove = yield Service.find({
             id: this.params.id
         }).remove().exec();
-        this.body = remove.ok;
+        this.body = remove;
     }
 
     static * unregisterAll() {

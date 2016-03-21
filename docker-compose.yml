@@ -5,8 +5,6 @@ web:
   command: start
   environment:
     NODE_ENV: staging
-  ports:
-    - "8000"
   links:
     - mongo
 
@@ -15,7 +13,7 @@ mongo:
   container_name: api-gateway-mongo
   command: --smallfiles
   ports:
-    - "27017:27017"
+    - "27017"
   volumes:
     # in osx the host machine volume directory cannot be under /Users
     # http://stackoverflow.hex1.ru/questions/34390220/how-to-mount-external-volume-for-mongodb-using-docker-compose-and-docker-machine

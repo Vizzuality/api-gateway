@@ -3,16 +3,18 @@ set -e
 
 if [ "$1" = 'develop' ]; then
   echo "Running Development Server"
-  exec npm run develop
+  exec grunt --gruntfile app/Gruntfile.js
 elif [ "$1" = 'startDev' ]; then
   echo "Running Start Dev"
-  exec npm run startDev
+  exec node app/index
 elif [ "$1" = 'test' ]; then
   echo "Running Test"
-  exec npm test
+  exec grunt --gruntfile app/Gruntfile.js test
 elif [ "$1" = 'start' ]; then
   echo "Running Start"
-  exec npm start
+  exec node app/index
 else
   exec "$@"
 fi
+
+echo

@@ -7,7 +7,7 @@ var DispatcherService = require('services/dispatcherService');
 var ServiceNotFound = require('errors/serviceNotFound');
 
 var router = new Router({});
-
+var restCo = require('lib/restCo');
 
 class DispatcherRouter {
 
@@ -15,7 +15,7 @@ class DispatcherRouter {
         logger.info('Dispatch url', this.request.url, ' and method ', this.request.method);
         let requests = null;
         try {
-            requests = yield DispatcherService.getRequests(this.request.url, this.request.method, this.request.body, this.request.headers);
+            requests = yield DispatcherService.getRequests(this.request.url, this.request.method, this.request.body, this.request.headers, this.request.body.files);
         } catch (e) {
             logger.error(e);
             if (e instanceof ServiceNotFound) {
@@ -27,13 +27,15 @@ class DispatcherRouter {
             }
         }
         try {
+            logger.debug('Send request');
             requests = requests.map(function(requestConfig, i) {
-                return request(requestConfig);
+                return restCo(requestConfig);
             });
             let result = yield requests;
-            this.status = result[0].statusCode;
+
+            this.status = result[0].response.statusCode;
             this.body = result[0].body;
-            this.response.type = result[0].headers['content-type'];
+            this.response.type = result[0].response.headers['content-type'];
 
         } catch (e) {
             logger.error(e);

@@ -1,27 +1,26 @@
 FROM node:latest
 MAINTAINER raul.requero@vizzuality.com
 
-RUN groupadd -r apigateway && useradd -r -g apigateway apigateway
 
-RUN mkdir -p /opt/api-gateway
-ADD package.json /opt/api-gateway/package.json
-RUN cd /opt/api-gateway && npm install
+RUN npm install -g grunt-cli
+ENV NAME api-gateway
+ENV USER microservice
 
-COPY .jshintrc /opt/api-gateway/.jshintrc
-COPY Gruntfile.js /opt/api-gateway/Gruntfile.js
-COPY index.js /opt/api-gateway/index.js
-COPY entrypoint.sh /opt/api-gateway/entrypoint.sh
+RUN groupadd -r $USER && useradd -r -g $USER $USER
 
-WORKDIR /opt/api-gateway
+RUN mkdir -p /opt/$NAME
+ADD package.json /opt/$NAME/package.json
+RUN cd /opt/$NAME && npm install
 
-ADD ./src /opt/api-gateway/src
-ADD ./test /opt/api-gateway/test
-ADD ./config /opt/api-gateway/config
+COPY entrypoint.sh /opt/$NAME/entrypoint.sh
+COPY config /opt/$NAME/config
+
+WORKDIR /opt/$NAME
+
+ADD ./app /opt/$NAME/app
 
 # Tell Docker we are going to use this ports
-EXPOSE 8000
-# USER apigateway
+EXPOSE 3100 35729
+USER $USER
 
 ENTRYPOINT ["./entrypoint.sh"]
-# The command to run our app when the container is run
-# CMD ["npm", "run", "develop"]

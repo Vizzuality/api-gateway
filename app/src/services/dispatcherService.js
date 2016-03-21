@@ -6,7 +6,13 @@ var config = require('config');
 var pathToRegexp = require('path-to-regexp');
 var Service = require('models/service');
 var ServiceNotFound = require('errors/serviceNotFound');
+var rest = require('restler');
 
+var getLength = function(form){
+    return function(callback){
+        form.getLength(callback);
+    };
+};
 
 class DispatcherService {
 
@@ -14,7 +20,7 @@ class DispatcherService {
         logger.debug('Building url');
         var result = service.urlRegex.exec(sourceUrl);
         let keys = {};
-        service.keys.map(function(key, i){
+        service.keys.map(function(key, i) {
             keys[key] = result[i + 1];
         });
         let toPath = pathToRegexp.compile(targetUrl);
@@ -23,7 +29,7 @@ class DispatcherService {
         return buildUrl;
     }
 
-    static * getRequests(sourceUrl, sourceMethod, body, headers){
+    static * getRequests(sourceUrl, sourceMethod, body, headers, files) {
         logger.debug('Obtaining config request');
         var requests = [];
         var parsedUrl = url.parse(sourceUrl);
@@ -31,10 +37,10 @@ class DispatcherService {
             $where: 'this.urlRegex && this.urlRegex.test(\'' + parsedUrl.pathname + '\')',
             method: sourceMethod
         });
-        logger.debug(service);
+
         let configRequest = null;
-        if(service && service.endpoints) {
-            for(let i = 0, length = service.endpoints.length; i < length; i++){
+        if (service && service.endpoints) {
+            for (let i = 0, length = service.endpoints.length; i < length; i++) {
                 let endpoint = service.endpoints[i];
                 logger.info('Dispathing request from %s to %s%s private endpoint. Type: %s', parsedUrl.pathname, endpoint.baseUrl, endpoint.path, endpoint.type);
 
@@ -45,9 +51,18 @@ class DispatcherService {
                     json: true
                 };
                 logger.debug('Create request to %s', endpoint.baseUrl + url);
-                if(endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT'){
+                if (endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT') {
                     logger.debug('Method is %s. Adding body', configRequest.method);
-                    configRequest.body = body;
+                    configRequest.data = body;
+                }
+                if (files) {
+                    logger.debug('Adding files');
+                    let formData = {};
+                    for (let key in files) {
+                        formData[key] = rest.file(files[key].path);
+                    }
+                    configRequest.data = Object.assign(configRequest.data || {}, formData);
+                    configRequest.multipart = true;
                 }
                 requests.push(configRequest);
             }
@@ -58,14 +73,14 @@ class DispatcherService {
             configRequest = {
                 uri: config.get('oldAPI.url') + sourceUrl,
                 method: sourceMethod,
-                json:true
+                json: true
             };
-            if(headers){
+            if (headers) {
                 logger.debug('Adding headers');
                 configRequest.headers = headers;
             }
             logger.debug('Create request to %s', config.get('oldAPI.url') + sourceUrl);
-            if(configRequest.method === 'POST' || configRequest.method === 'PATCH' || configRequest.method === 'PUT'){
+            if (configRequest.method === 'POST' || configRequest.method === 'PATCH' || configRequest.method === 'PUT') {
                 logger.debug('Method is %s. Adding body', configRequest.method);
                 configRequest.body = body;
             }

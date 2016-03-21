@@ -2,12 +2,23 @@
 var config = require('config');
 var logger = require('logger');
 var mongoose = require('mongoose');
-
 var mongoUri = process.env.MONGOLAB_URI || 'mongodb://' + config.get('mongodb.host') + ':' + config.get('mongodb.port') + '/' + config.get('mongodb.database');
-
 var auth = require('koa-basic-auth');
 var mount = require('koa-mount');
 var koa = require('koa');
+var path = require('path');
+var koaBody = require('koa-body')({
+    multipart: true,
+    jsonLimit: '50mb',
+    formidable: {
+        uploadDir: '/tmp',
+        onFileBegin: function(name, file) {
+            var folder = path.dirname(file.path);
+            file.path = path.join(folder, file.name);
+        }
+    }
+});
+
 var app = koa();
 var ErrorSerializer = require('serializers/errorSerializer');
 
@@ -59,7 +70,7 @@ var onDbReady = function (err) {
     });
 
     //load endpoints and load validate only for /gateway
-    app.use(require('koa-bodyparser')());
+    app.use(koaBody);
     app.use(mount('/gateway', require('koa-validate')()));
     app.use(mount('/gateway', require('routes/gateway/serviceRouter').middleware()));
     app.use(require('routes/dispatcherRouter').middleware());

@@ -1,7 +1,8 @@
 base:
   build: .
   ports:
-    - "80:8000"
+    - "8000:8000"
   container_name: api-gateway
-  volumes:
-    - ".:/home/api-gateway"
+  environment:
+    NODE_PATH: app/src
+    PORT: 8000
