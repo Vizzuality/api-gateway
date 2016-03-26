@@ -4,9 +4,11 @@
   "description": "Basic api gateway",
   "main": "index.js",
   "scripts": {
-    "test-e2e": "NODE_PATH=src NODE_ENV=test grunt e2eTest",
-    "test-unit": "NODE_PATH=src NODE_ENV=test grunt unitTest",
-    "start": "NODE_PATH=app/src node app/index"
+    "test-e2e": "NODE_PATH=app/src NODE_ENV=test grunt e2eTest",
+    "test-unit": "NODE_PATH=app/src NODE_ENV=test grunt unitTest",
+    "start": "NODE_PATH=app/src node app/index",
+    "develop": "docker-compose -f docker-compose-develop.yml build && docker-compose -f docker-compose-develop.yml up",
+    "test": "docker-compose -f docker-compose-test.yml run test"
   },
 
   "keywords": [
