@@ -125,7 +125,7 @@ class DispatcherService {
                         if(!dataFilters[endpoint.data[k]]){
                             //TODO obtain data
                         }
-                        configRequest[endpoint.data[k]] = dataFilters[endpoint.data[k]];
+                        configRequest.data[endpoint.data[k]] = dataFilters[endpoint.data[k]];
                     }
                     logger.debug('Final request', configRequest);
                 }
