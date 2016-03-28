@@ -1,163 +1,105 @@
-# API Gateway
-This repository is the base the all microservices implemented in nodejs.
+# Global Forest Watch API Gateway
 
+This repository is the entry point for the Global Forest Watch API. The
+API consists of many microservices, which are managed and routed to by
+this gateway. This application is also responsible for transparently
+proxying requests to the [old API](https://github.com/wri/gfw-api),
+which continues to service requests for endpoints that have not yet been
+rebuilt.
 
-## First time user
-Follow these steps to start the project.
+1. [How does it work?](#how-does-it-work)
+2. [Getting Started](#getting-started)
+3. [Deployment](#deployment)
+4. [Documentation](#documentation)
 
-* Clone this repository: ```git clone https://github.com/Vizzuality/api-gateway.git```
-* Enter in the directory (cd api-gateway)
-* Execute ```npm install```
-* To run in develop mode, execute: ```npm run develop```
-This command, it run the server with grunt in ```http://localhost:3000``` url. If you change anything in the code, the server run the test and restart the server.
-If you don't need up the server in develop mode, you can run the server with ```npm run startDev``` that run the server with the dev config. In Dev config, the server listen in ```http://localhost:3000```
+## How does it work?
 
-### Structure
+The API is made up of many microservices that communicate with one
+another using HTTP. This repository contains the gateway that maintains
+a list of available services (in a MongoDB database) and routes requests
+to the services based on the given path, and also routes requests to the
+old Python API.
 
-#### Routes Folder
-This folder contain the distinct files that define the routes of the microservice. All files must be end with suffix Router. Ex:
+* If a given path matches existing microservices, it is directed there.
+* If a given path does not match any microservices, it is proxied to the old API.
 
-```bash
-/routes
------- /api
----------- userRouter.js // in this file define /user
+The [Dispatcher](app/src/routes/dispatcherRouter.js) middleware and
+[DispatcherService](app/src/services/dispatcherService.js) are
+responsible for determining where to route requests.
 
-The complete path is: /api/user
+### How are microservices discovered?
+
+The services are responsible for registering themselves with the gateway
+and making it aware that they are available to receive requests. There
+exists a [services REST API](docs/service_registry.md) that is used for
+this purpose.
+
+## Getting Started
+
+### OS X
+
+We're using Docker which, luckily for you, means that getting the
+application running locally should be fairly painless. First, make sure
+that you have [Docker Compose](https://docs.docker.com/compose/install/)
+installed on your machine.
+
+If you've not used Docker before, you may need to set up some defaults:
+
+```
+docker-machine create --driver virtualbox default
+docker-machine start default
+eval $(docker-machine env default)
 ```
 
-The name of subfolders of the routes folder define the subpath of the endpoints
+Now we're ready to actually get the application running:
 
-#### Services Folder
-This folder contain the services of the application. The logic services.
-
-#### Models Folder
-This folder contains the models of database or POJOs. For example, if we use mongoose, this folder contains the mongoose models.
-
-#### Errors Folder
-This folder contains the custom errors that the application throws.
-
-#### Serializers Folder
-This folder contains files that modify the output to return json standard [jsonapi](http://jsonapi.org/) Serializer library: [jsonapi-serializer](https://github.com/SeyZ/jsonapi-serializer)
-
-#### Validators Folder
-This folder contains the distinct validator classes that validate the input body or input query params. Use [koa-validate](https://github.com/RocksonZeta/koa-validate)
-
-#### Config
-This folder contains the distinct files by environment. Always it must exist:
-- dev.json (develop)
-- staging.json (staging environment)
-- prod.json (production environment)
-
-We use [config](https://github.com/lorenwest/node-config) module.
-
-#### app.js
-This file load the application and dependencies.
-
-#### loader.js
-This file is responsible for loading all routes and declare it. it search all files that ends with Router.js suffix in the routes folder and subfolders
-
-#### logger.js
-This file config logger of the application
-
-
-#### test
-This folder contains the tests of the microservice. 2 folders
-
-##### unit
-  This folder contains the unit tests. It contains a subfolder by each module of the microservice (serializer, services, models, etc)   All files contains .test.js suffix
-
-##### e2e
- This folder contains the e2e tests.  All files contains .spec.js suffix
-
-#### lib/restCo.js
-Wrapper of restler library to use with generators (ES6)
-
-
-## Installation in local
-
-```bash
+```
+git clone https://github.com/Vizzuality/api-gateway.git
+cd api-gateway
 npm install
-
-npm install -g bunyan  // logger system
-```
-Is necessary install mongodb and you set the url in file config by your environment.
-
-## Run
-Execute the next command: (Environment available: dev, test, staging, prod)
-
-```bash
-    NODE_ENV=<env> npm start
+npm run develop
 ```
 
-if you want see the logs formatted execute:
+In case it's not obvious (it's not), grab your Docker machine's IP:
 
-```bash
-    NODE_ENV=<env> npm start | bunyan
+```
+docker-machine ip
 ```
 
-## Production and Staging installation environment
-Is necessary define the next environment variables:
+The application will be running on port 8000.
+
+## Deployment
+
+The application is deployed to Heroku, and thus is thankfull rather easy
+to deploy.
+
+Setup Heroku for the repository:
+
+```
+heroku git:remote -a api-gateway-staging -r staging
+```
+
+And deploy as normal:
+
+```
+git push staging master
+```
+
+### Configuration
+
+It is necessary to define these environment variables:
 
 * NODE_ENV => Environment (prod, staging, dev)
 
-if you want securized your API:
-* BASIC_AUTH: if the value is on the authentication is active, in other case not.
-* BASIC_AUTH_USERNAME: Username of authentication
-* BASIC_AUTH_PASSWORD: Password of authentication
+### Authentication
 
+The following environment variables can be used to setup HTTP Basic
+Authentication:
 
-# Service Registry
+* `BASIC_AUTH`: 'on'/'off' depending on if the authentication is active
+* `BASIC_AUTH_USERNAME`: username
+* `BASIC_AUTH_PASSWORD`: password
 
-The api is securized with auth basic. To set authentication config, set the next environment variables:
-* BASIC_AUTH: if the value is on the authentication is active, in other case not.
-* BASIC_AUTH_USERNAME: Username of authentication
-* BASIC_AUTH_PASSWORD: Password of authentication
+## Documentation
 
-The public API for register/unregister service is:
-
-## Register service
-To register service do POST request to /gateway/service
-body:
-````
-{{
-    "id": "#(service.id)",
-    "name": "#(service.name)",
-    "urls": [{
-        "url": "/usuarios",
-        "method": "GET",
-        "endpoints": [{
-            "method": "GET",
-            "baseUrl": "#(service.uri)",
-            "path": "/api/users"
-        }]
-    }, {
-        "url": "/usuarios",
-        "method": "POST",
-        "endpoints": [{
-            "method": "POST",
-            "baseUrl": "#(service.uri)",
-            "path": "/api/users"
-        }]
-    }]
-}
-
-````
-
-If the id exist, the all config with this id will be deleted and insert the new configuration.
-The id must be unique by microservice and version
-
-## Unregister service
-To register service do DELETE request to /gateway/service/<idService>
-If possible remove all service, if you do request to /gateway/service/all
-
-## Get services
-To obtain json with the services registered, you do GET request to: /gateway/service.
-
-
-REMEMBER: if the authentication is active, you attack the api with the username and password.
-Example:
-http://<username>:<password>@apigateway.vizzuality.com/gateway/service
-
-## TODO:
-* Add support to several endpoints in same url
-* Add Circuit Breaker pattern
+The services are documented using [Swagger](http://swagger.io/) specifications.
