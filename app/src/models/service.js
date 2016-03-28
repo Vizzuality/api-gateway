@@ -13,9 +13,11 @@ var Service = new Schema({
     endpoints: [new mongoose.Schema({
         method: {type: String, required: true, default: 'GET', trim:true},
         baseUrl: {type: String, required: true, trim: true},
-        path: {type: String, required: true, trim: true}
+        path: {type: String, required: true, trim: true},
+        data: [{type: String}]
     })],
-    registerDate: {type: Date, required: true, default: Date.now}
+    registerDate: {type: Date, required: true, default: Date.now},
+    filters: Schema.Types.Mixed
 });
 
 Service.index({ url: 1});

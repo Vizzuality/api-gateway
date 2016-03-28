@@ -15,7 +15,7 @@ class DispatcherRouter {
         logger.info('Dispatch url', this.request.url, ' and method ', this.request.method);
         let requests = null;
         try {
-            requests = yield DispatcherService.getRequests(this.request.url, this.request.method, this.request.body, this.request.headers, this.request.body.files);
+            requests = yield DispatcherService.getRequests(this.request.path, this.request.method, this.request.body, this.request.headers, this.request.search, this.request.body.files);
         } catch (e) {
             logger.error(e);
             if (e instanceof ServiceNotFound) {

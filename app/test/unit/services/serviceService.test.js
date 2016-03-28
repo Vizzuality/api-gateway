@@ -77,6 +77,7 @@ describe('Service service', function () {
         var serviceMock = function (data) {
             this.data = data;
         };
+
         serviceMock.prototype.save = function () {
 
             return function (callback) {
@@ -84,7 +85,38 @@ describe('Service service', function () {
                 callback(null, this.data);
             }.bind(this);
         };
+        var filterMock = function (data) {
+            this.data = data;
+        };
+        filterMock.prototype.save = function () {
+
+            return function (callback) {
+                this.data._id = 'asds9a7asdf6asdf8';
+                callback(null, this.data);
+            }.bind(this);
+        };
+        filterMock.find = function () {
+            var find = function(){
+
+            };
+            find.remove = function(callback){
+                var remove = function(){
+
+                };
+                remove.exec = function(callback){
+                    return function (callback) {
+
+                        callback(null, null);
+                    };
+                };
+                return remove;
+            };
+
+            return find;
+
+        };
         mockery.registerMock('models/service', serviceMock);
+        mockery.registerMock('models/filter', filterMock);
         ServiceService = require('services/serviceService');
     });
 

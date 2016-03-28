@@ -16,5 +16,8 @@
     },
     "oldAPI":{
         "url":"https://testingadrianapi-dot-gfw-apis.appspot.com"
+    },
+    "providers":{
+        "dataset": "/dataset/:dataset"
     }
 }
