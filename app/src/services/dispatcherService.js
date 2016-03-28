@@ -34,10 +34,13 @@ class DispatcherService {
         filter.keys.map(function(key, i) {
             keys[key] = resultExec[i + 1];
         });
-        let urlDataset = config.get('providers.'+filter.dataProvider);
+
+        let toPath = pathToRegexp.compile(config.get('providers.'+filter.dataProvider));
+        let keysUrlDataset = {};
         if(filter.paramProvider){
-            urlDataset = urlDataset.replace(':'+filter.paramProvider, keys[filter.paramProvider]);
+            keysUrlDataset[filter.paramProvider] = keys[filter.paramProvider];
         }
+        let urlDataset = toPath(keys);
         let requests = yield DispatcherService.getRequests(urlDataset, 'GET');
         logger.debug('request obtained ', requests);
         requests = requests.map(function(requestConfig, i) {
@@ -48,9 +51,7 @@ class DispatcherService {
         if(result[0].response.statusCode === 200){
             logger.debug('Response 200');
             let data = result[0].body;
-
             let filters = {};
-
             for(let i=0, length=filter.filters.length; i < length; i++){
                 filters[filter.filters[i]] = data[filter.filters[i]];
             }
@@ -124,7 +125,6 @@ class DispatcherService {
                         if(!dataFilters[endpoint.data[k]]){
                             //TODO obtain data
                         }
-
                         configRequest[endpoint.data[k]] = dataFilters[endpoint.data[k]];
                     }
                     logger.debug('Final request', configRequest);
