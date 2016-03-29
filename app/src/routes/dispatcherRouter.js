@@ -36,7 +36,7 @@ class DispatcherRouter {
             this.status = result[0].response.statusCode;
             this.body = result[0].body;
             this.response.type = result[0].response.headers['content-type'];
-
+            this.set(result[0].response.headers);
         } catch (e) {
             logger.error(e);
             this.throw(500, 'Unexpected error');
