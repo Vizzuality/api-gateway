@@ -15,6 +15,6 @@
         "port": 32768
     },
     "oldAPI":{
-        "url":"https://staging.api-staging.globalforestwatch.org"
+        "url":"http://staging.api-staging.globalforestwatch.org"
     }
 }
