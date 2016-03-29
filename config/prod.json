@@ -3,6 +3,6 @@
         "name": "API-Gateway",
         "level": "info",
         "toFile": true,
-        "dirLogFile": "/var/logs/api_gateway.log"
+        "dirLogFile": "./logs/api_gateway.log"
     }
 }
