@@ -19,6 +19,7 @@ class DispatcherRouter {
         } catch (e) {
             logger.error(e);
             if (e instanceof ServiceNotFound) {
+                logger.debug('Service not found');
                 this.throw(404, 'Endpoint not found');
                 return;
             } else {

@@ -4,20 +4,5 @@
         "level": "debug",
         "toFile": false,
         "dirLogFile": null
-    },
-    "server": {
-        "port": 8000
-    },
-    "mongodb":{
-        "uri": null,
-        "uri": null,
-        "database": null,
-        "host": null
-    },
-    "oldAPI":{
-        "url":"https://testingadrianapi-dot-gfw-apis.appspot.com"
-    },
-    "providers":{
-        "dataset": "/dataset/:dataset"
     }
 }

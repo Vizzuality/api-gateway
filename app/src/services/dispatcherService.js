@@ -46,22 +46,34 @@ class DispatcherService {
         requests = requests.map(function(requestConfig, i) {
             return restCo(requestConfig);
         });
-        logger.debug('Doing request');
-        let result = yield requests;
-        if(result[0].response.statusCode === 200){
-            logger.debug('Response 200');
-            let data = result[0].body;
-            let filters = {};
-            for(let i=0, length=filter.filters.length; i < length; i++){
-                filters[filter.filters[i]] = data[filter.filters[i]];
+
+        try{
+            let result = yield requests;
+            if(result[0].response.statusCode === 200){
+                logger.debug('Response 200');
+                let data = result[0].body;
+                let filters = {};
+                for(let i=0, length=filter.filters.length; i < length; i++){
+                    filters[filter.filters[i]] = data[filter.filters[i]];
+                }
+                let response = {
+                    filters: filters
+                };
+                response[filter.dataProvider] = data;
+                return response;
             }
-            let response = {
-                filters: filters
-            };
-            response[filter.dataProvider] = data;
-            return response;
+            throw new ServiceNotFound('Not found services to url:' + url);
+            
+        }catch(e){
+            if(e.status === 404){
+                throw new ServiceNotFound('Not found services to url:' + url);
+            }else {
+                logger.error('Error to request', e);
+                throw e;
+            }
+
+
         }
-        throw new ServiceNotFound('Not found services to url:' + url);
     }
 
     static * getRequests(sourceUrl, sourceMethod, body, headers, queryParams, files) {
@@ -75,7 +87,17 @@ class DispatcherService {
         logger.debug('Filter Obtained', filter);
         let dataFilters = null;
         if(filter){
-            dataFilters = yield DispatcherService.obtainFiltersAndDataProviders(sourceUrl, filter);
+            try{
+                dataFilters = yield DispatcherService.obtainFiltersAndDataProviders(sourceUrl, filter);
+            }catch(e){
+                logger.error('Error in obtainFiltersAndDataProviders');
+                if (e instanceof ServiceNotFound) {
+                    logger.debug('Service not found');
+                    throw e;
+                } else {
+                    throw e;
+                }
+            }
             logger.debug('dataFilters', dataFilters);
         }
         var requests = [];
