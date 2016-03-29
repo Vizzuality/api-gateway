@@ -8,6 +8,13 @@ var ServiceNotFound = require('errors/serviceNotFound');
 
 var router = new Router({});
 var restCo = require('lib/restCo');
+var fs = require('fs');
+
+var unlink = function(file) {
+    return function(callback) {
+        fs.unlink(file, callback);
+    };
+};
 
 class DispatcherRouter {
 
@@ -41,6 +48,15 @@ class DispatcherRouter {
         } catch (e) {
             logger.error(e);
             this.throw(500, 'Unexpected error');
+        } finally {
+            if(this.request.body.files){
+                logger.debug('Removing files');
+                let files = Object.keys(this.request.body.files);
+                for( let i=0, length= files.length; i < length; i++){
+                    logger.debug('Removing file  %s', this.request.body.files[files[i]].path);
+                    yield unlink(this.request.body.files[files[i]].path);
+                }
+            }
         }
     }
 

@@ -27,7 +27,7 @@ class DispatcherService {
     }
 
 
-    static * obtainFiltersAndDataProviders(url, filter){
+    static * obtainFiltersAndDataProviders(url, filter) {
         logger.debug('Obtaining data providers and filters ', filter);
         var resultExec = filter.urlRegex.exec(url);
         let keys = {};
@@ -35,9 +35,9 @@ class DispatcherService {
             keys[key] = resultExec[i + 1];
         });
 
-        let toPath = pathToRegexp.compile(config.get('providers.'+filter.dataProvider));
+        let toPath = pathToRegexp.compile(config.get('providers.' + filter.dataProvider));
         let keysUrlDataset = {};
-        if(filter.paramProvider){
+        if (filter.paramProvider) {
             keysUrlDataset[filter.paramProvider] = keys[filter.paramProvider];
         }
         let urlDataset = toPath(keys);
@@ -47,13 +47,13 @@ class DispatcherService {
             return restCo(requestConfig);
         });
 
-        try{
+        try {
             let result = yield requests;
-            if(result[0].response.statusCode === 200){
+            if (result[0].response.statusCode === 200) {
                 logger.debug('Response 200');
                 let data = result[0].body;
                 let filters = {};
-                for(let i=0, length=filter.filters.length; i < length; i++){
+                for (let i = 0, length = filter.filters.length; i < length; i++) {
                     filters[filter.filters[i]] = data[filter.filters[i]];
                 }
                 let response = {
@@ -63,16 +63,14 @@ class DispatcherService {
                 return response;
             }
             throw new ServiceNotFound('Not found services to url:' + url);
-            
-        }catch(e){
-            if(e.status === 404){
+
+        } catch (e) {
+            if (e.status === 404) {
                 throw new ServiceNotFound('Not found services to url:' + url);
-            }else {
+            } else {
                 logger.error('Error to request', e);
                 throw e;
             }
-
-
         }
     }
 
@@ -86,10 +84,10 @@ class DispatcherService {
         });
         logger.debug('Filter Obtained', filter);
         let dataFilters = null;
-        if(filter){
-            try{
+        if (filter) {
+            try {
                 dataFilters = yield DispatcherService.obtainFiltersAndDataProviders(sourceUrl, filter);
-            }catch(e){
+            } catch (e) {
                 logger.error('Error in obtainFiltersAndDataProviders');
                 if (e instanceof ServiceNotFound) {
                     logger.debug('Service not found');
@@ -107,7 +105,7 @@ class DispatcherService {
             method: sourceMethod
         };
 
-        if(dataFilters && dataFilters.filters){
+        if (dataFilters && dataFilters.filters) {
             findFilters.filters = dataFilters.filters;
         }
         var service = yield Service.findOne(findFilters);
@@ -124,7 +122,7 @@ class DispatcherService {
                     method: endpoint.method,
                     json: true
                 };
-                if(queryParams){
+                if (queryParams) {
                     configRequest.uri = configRequest.uri + queryParams;
                 }
                 logger.debug('Create request to %s', configRequest.uri);
@@ -141,10 +139,10 @@ class DispatcherService {
                     configRequest.data = Object.assign(configRequest.data || {}, formData);
                     configRequest.multipart = true;
                 }
-                if(endpoint.data){
+                if (endpoint.data) {
                     logger.debug('Obtaining data to endpoints');
-                    for(let k = 0, lengthData = endpoint.data.length; k < lengthData; k++){
-                        if(!dataFilters[endpoint.data[k]]){
+                    for (let k = 0, lengthData = endpoint.data.length; k < lengthData; k++) {
+                        if (!dataFilters[endpoint.data[k]]) {
                             //TODO obtain data
                         }
                         configRequest.data[endpoint.data[k]] = dataFilters[endpoint.data[k]];
