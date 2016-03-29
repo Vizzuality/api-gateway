@@ -139,7 +139,7 @@ class DispatcherService {
                     configRequest.data = Object.assign(configRequest.data || {}, formData);
                     configRequest.multipart = true;
                 }
-                if (endpoint.data) {
+                if (endpoint.data && dataFilters) {
                     logger.debug('Obtaining data to endpoints');
                     for (let k = 0, lengthData = endpoint.data.length; k < lengthData; k++) {
                         if (!dataFilters[endpoint.data[k]]) {
