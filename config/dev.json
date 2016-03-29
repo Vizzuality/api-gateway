@@ -15,6 +15,6 @@
         "port": 32768
     },
     "oldAPI":{
-        "url":"https://testingadrianapi-dot-gfw-apis.appspot.com"
+        "url":"https://staging.api-staging.globalforestwatch.org"
     }
 }

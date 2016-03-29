@@ -15,6 +15,6 @@
         "host": null
     },
     "oldAPI":{
-        "url":"https://testingadrianapi-dot-gfw-apis.appspot.com"
+        "url":"https://staging.api-staging.globalforestwatch.org"
     }
 }
