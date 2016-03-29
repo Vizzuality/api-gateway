@@ -5,8 +5,9 @@ var assert = require('assert');
 var mongoose = require('mongoose');
 var sinon = require('sinon');
 var config = require('config');
-var dispatcherService = require('services/dispatcherService');
+
 var ServiceNotFound = require('errors/serviceNotFound');
+var mockery = require('mockery');
 
 describe('Distpatcher service', function () {
 
@@ -21,17 +22,51 @@ describe('Distpatcher service', function () {
             endpoints: [{
                 method: 'GET',
                 baseUrl: 'http://localhost:3000',
-                path: '/api/users'
+                path: '/api/users',
+                data: ['dataset']
             }]
         };
 
         before(function* () {
-            var mockFind = function (callback) {
-                callback(null, service);
+            mockery.enable({
+                warnOnReplace: false,
+                warnOnUnregistered: false,
+                useCleanCache: true
+            });
+        });
+        let dispatcherService = null;
+        before(function* () {
+
+            var serviceMock = function (data) {
+                this.data = data;
             };
 
-            // stub the mongoose find() and return mock find
-            mongoose.Model.findOne = sinon.stub().returns(mockFind);
+            serviceMock.prototype.find = function () {
+
+                return function (callback) {
+                    callback(null, [service]);
+                }.bind(this);
+            };
+            serviceMock.findOne = function () {
+
+                return function (callback) {
+                    callback(null, service);
+                }.bind(this);
+            };
+
+            var filterMock = function (data) {
+                this.data = data;
+            };
+            filterMock.findOne = function(query){
+                logger.debug('TEST: query', query);
+                return function (callback) {
+                    callback(null, null);
+                }.bind(this);
+            };
+
+            mockery.registerMock('models/service', serviceMock);
+            mockery.registerMock('models/filter', filterMock);
+            dispatcherService = require('services/dispatcherService');
         });
 
         it('Generate request correct from url', function* () {
@@ -46,8 +81,13 @@ describe('Distpatcher service', function () {
             request.uri.should.have.equal(service.endpoints[0].baseUrl + service.endpoints[0].path);
         });
 
-        after(function* () {
+        afterEach(function *(){
+            mockery.deregisterAll();
+            dispatcherService = null;
+        });
 
+        after(function* () {
+            mockery.disable();
         });
 
     });
@@ -56,12 +96,44 @@ describe('Distpatcher service', function () {
 
 
         before(function* () {
-            var mockFind = function (callback) {
-                callback(null, null);
+            mockery.enable({
+                warnOnReplace: false,
+                warnOnUnregistered: false,
+                useCleanCache: true
+            });
+        });
+        let dispatcherService = null;
+        beforeEach(function* () {
+
+            var serviceMock = function (data) {
+                this.data = data;
             };
 
-            // stub the mongoose find() and return mock find
-            mongoose.Model.findOne = sinon.stub().returns(mockFind);
+            serviceMock.prototype.find = function () {
+
+                return function (callback) {
+                    callback(null, null);
+                }.bind(this);
+            };
+            serviceMock.findOne = function () {
+
+                return function (callback) {
+                    callback(null, null);
+                }.bind(this);
+            };
+
+            var filterMock = function (data) {
+                this.data = data;
+            };
+            filterMock.findOne = function(query){
+                return function (callback) {
+                    callback(null, null);
+                }.bind(this);
+            };
+
+            mockery.registerMock('models/service', serviceMock);
+            mockery.registerMock('models/filter', filterMock);
+            dispatcherService = require('services/dispatcherService');
         });
 
         it('Endpoint not found. Redirect to old API', function* () {
@@ -122,8 +194,13 @@ describe('Distpatcher service', function () {
             request.body.should.be.equal(body);
         });
 
-        after(function* () {
+        afterEach(function *(){
+            mockery.deregisterAll();
+            dispatcherService = null;
+        });
 
+        after(function* () {
+            mockery.disable();
         });
 
     });
