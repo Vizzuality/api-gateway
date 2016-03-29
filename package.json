@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "Basic api gateway",
   "main": "index.js",
+  "scripts":{
+      "test-e2e": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js e2eTest",
+      "test-unit": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js unitTest",
+      "start": "NODE_PATH=app/src node app/index",
+      "test": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js test"
+  },
   "keywords": [
     "api-gateway",
     "microservices",

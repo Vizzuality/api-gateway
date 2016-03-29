@@ -2,16 +2,13 @@
 
 case "$1" in
     test-e2e)
-        type grunt >/dev/null 2>&1 || { echo >&2 "grunt is required but it's not installed.  Aborting."; exit 1; }
-        NODE_PATH=app/src NODE_ENV=test grunt e2eTest
+        npm run test-e2e
         ;;
     test-unit)
-        type grunt >/dev/null 2>&1 || { echo >&2 "grunt is required but it's not installed.  Aborting."; exit 1; }
-        NODE_PATH=app/src NODE_ENV=test grunt unitTest
+        npm run test-unit
         ;;
     start)
-        type node >/dev/null 2>&1 || { echo >&2 "node is required but it's not installed.  Aborting."; exit 1; }
-        NODE_PATH=app/src node app/index
+        npm start
         ;;
     develop)
         type docker-compose >/dev/null 2>&1 || { echo >&2 "docker-compose is required but it's not installed.  Aborting."; exit 1; }
