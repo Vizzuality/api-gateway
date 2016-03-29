@@ -5,7 +5,6 @@ var logger = require('logger');
 var request = require('co-request');
 var DispatcherService = require('services/dispatcherService');
 var ServiceNotFound = require('errors/serviceNotFound');
-
 var router = new Router({});
 var restCo = require('lib/restCo');
 var fs = require('fs');
