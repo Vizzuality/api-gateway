@@ -70,7 +70,7 @@ The application will be running on port 8000.
 
 ## Deployment
 
-The application is deployed to Heroku, and thus is thankfull rather easy
+The application is deployed to Heroku, and thus is thankfully rather easy
 to deploy.
 
 Setup Heroku for the repository:
