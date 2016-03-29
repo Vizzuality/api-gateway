@@ -47,8 +47,7 @@ class DispatcherService {
                 let url = yield DispatcherService.buildUrl(parsedUrl.pathname, endpoint.path, service);
                 configRequest = {
                     uri: endpoint.baseUrl + url,
-                    method: endpoint.method,
-                    json: true
+                    method: endpoint.method
                 };
                 logger.debug('Create request to %s', endpoint.baseUrl + url);
                 if (endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT') {
@@ -68,12 +67,11 @@ class DispatcherService {
             }
             return requests;
         } else  {
-
             logger.debug('Redirect to old API');
             configRequest = {
                 uri: config.get('oldAPI.url') + sourceUrl,
                 method: sourceMethod,
-                json: true
+                json: false
             };
             if (headers) {
                 logger.debug('Adding headers');
