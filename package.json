@@ -10,7 +10,6 @@
     "develop": "docker-compose -f docker-compose-develop.yml build && docker-compose -f docker-compose-develop.yml up",
     "test": "docker-compose -f docker-compose-test.yml run test"
   },
-
   "keywords": [
     "api-gateway",
     "microservices",
@@ -28,19 +27,20 @@
     "jsonapi-serializer": "2.1.1",
     "koa": "1.2.0",
     "koa-basic-auth": "1.1.2",
+    "koa-body": "1.4.0",
     "koa-bodyparser": "2.0.1",
     "koa-logger": "1.3.0",
     "koa-mount": "1.3.0",
     "koa-router": "5.4.0",
     "koa-validate": "0.2.11",
+    "lodash": "^4.6.1",
     "mongoose": "4.4.6",
     "mongoose-regexp": "0.0.1",
     "path-to-regexp": "1.2.1",
+    "restler": "3.4.0",
     "slug": "0.9.1",
     "thunks": "4.1.3",
-    "url": "0.11.0",
-    "koa-body": "1.4.0",
-    "restler": "3.4.0"
+    "url": "0.11.0"
   },
   "devDependencies": {
     "co-mocha": "1.1.2",

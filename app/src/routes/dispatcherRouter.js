@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var Router = require('koa-router');
 var logger = require('logger');
 var request = require('co-request');
@@ -8,6 +9,19 @@ var ServiceNotFound = require('errors/serviceNotFound');
 
 var router = new Router({});
 var restCo = require('lib/restCo');
+
+var ALLOWED_HEADERS = [
+  'access-control-allow-origin',
+  'access-control-allow-headers',
+  'cache-control',
+  'charset'
+];
+
+var getHeadersFromResponse = function(response) {
+    return _.pick(response.headers, function(value, key) {
+        return ALLOWED_HEADERS.indexOf(key.toLowerCase()) > -1;
+    });
+};
 
 class DispatcherRouter {
 
@@ -28,15 +42,15 @@ class DispatcherRouter {
         }
         try {
             logger.debug('Send request');
-            requests = requests.map(function(requestConfig, i) {
+            requests = requests.map(function(requestConfig) {
                 return restCo(requestConfig);
             });
             let result = yield requests;
 
+            this.set(getHeadersFromResponse(result[0].response));
             this.status = result[0].response.statusCode;
             this.body = result[0].body;
             this.response.type = result[0].response.headers['content-type'];
-            this.set(result[0].response.headers);
         } catch (e) {
             logger.error(e);
             this.throw(500, 'Unexpected error');
