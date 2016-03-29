@@ -16,10 +16,16 @@ To register service:
     "urls": [{
         "url": "/usuarios",
         "method": "GET",
+        "dataProvider": "dataset", // this attribute contain the name of provider which the api-gateway uses to filter the endpoint with the filter defined in 'filters'. The url to obtain the provider object is configured in config files. Only possible 'dataset'
+        "paramProvider": "dataset", // name of the param of the url that the api-gateway uses to obtain the provider object.
+        "filters":{ // object that contain the distinct filters that the api-gateway uses to filter the distinct endpoints. The key must be a key of the provider object.
+            "provider": "CartoDb"
+        },
         "endpoints": [{
-            "method": "GET",
+            "method": "POST",
             "baseUrl": "#(service.uri)",
-            "path": "/api/users"
+            "path": "/api/users",
+            "data": ["dataset"] // if this key exists, the api-gateway sends to microservice the object provider with this name. it sends in the body on the request. Only POST methods. Ex: body => {dataset: {object}}
         }]
     }, {
         "url": "/usuarios",
