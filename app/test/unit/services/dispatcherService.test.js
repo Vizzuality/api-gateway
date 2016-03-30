@@ -137,61 +137,13 @@ describe('Distpatcher service', function () {
         });
 
         it('Endpoint not found. Redirect to old API', function* () {
+            try{
+                let requests = yield dispatcherService.getRequests('/notExist', 'GET');
+            } catch(e){
+                e.should.be.an.instanceOf(Error);
+                e.name.should.be.equal('ServiceNotFound');
+            }
 
-            let requests = yield dispatcherService.getRequests('/notExist', 'GET');
-            logger.debug(requests);
-            requests.should.be.a.Array();
-            requests.should.length(1);
-            let request = requests[0];
-            request.should.have.property('uri');
-            request.should.have.property('method');
-            request.should.have.property('json');
-            request.method.should.have.equal('GET');
-            request.uri.should.have.equal(config.get('oldAPI.url') + '/notExist');
-        });
-
-        it('Endpoint not found. Redirect to old API with headers', function* () {
-            var headers = {
-                'content-type': 'application/json'
-            };
-
-            let requests = yield dispatcherService.getRequests('/notExist', 'GET', {}, headers);
-            logger.debug(requests);
-            requests.should.be.a.Array();
-            requests.should.length(1);
-            let request = requests[0];
-            request.should.have.property('uri');
-            request.should.have.property('method');
-            request.should.have.property('json');
-            request.should.have.property('headers');
-            request.method.should.have.equal('GET');
-            request.headers.should.have.property('content-type');
-            request.headers['content-type'].should.be.equal(headers['content-type']);
-            request.uri.should.have.equal(config.get('oldAPI.url') + '/notExist');
-        });
-
-        it('Endpoint not found. Redirect to old API (with Body)', function* () {
-            var headers = {
-                'content-type': 'application/json'
-            };
-            var body = {
-                name: 'Pepe'
-            };
-            let requests = yield dispatcherService.getRequests('/notExist', 'POST', body, headers);
-            logger.debug(requests);
-            requests.should.be.a.Array();
-            requests.should.length(1);
-            let request = requests[0];
-            request.should.have.property('uri');
-            request.should.have.property('method');
-            request.should.have.property('json');
-            request.should.have.property('headers');
-            request.method.should.have.equal('POST');
-            request.headers.should.have.property('content-type');
-            request.headers['content-type'].should.be.equal(headers['content-type']);
-            request.uri.should.have.equal(config.get('oldAPI.url') + '/notExist');
-            request.should.have.property('body');
-            request.body.should.be.equal(body);
         });
 
         afterEach(function *(){

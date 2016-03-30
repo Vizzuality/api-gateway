@@ -4,11 +4,15 @@ var logger = require('logger');
 var pathToRegexp = require('path-to-regexp');
 var Service = require('models/service');
 var Filter = require('models/filter');
+var Microservice = require('models/microservice');
 
 class ServiceService {
 
     static * saveService(data){
         logger.debug('Saving service ', data);
+        logger.debug('Removing old filter with same url %s', data.url);
+        yield Filter.find({url: data.url, method: data.method}).remove().exec();
+
         let keys = [];
         let regex = pathToRegexp(data.url, keys);
         if(keys && keys.length > 0){
@@ -26,8 +30,6 @@ class ServiceService {
             endpoints: data.endpoints,
             filters: data.filters
         }).save();
-        logger.debug('Removing old filter with same url %s', data.url);
-        yield Filter.find({url: data.url, method: data.method}).remove().exec();
 
         if(data.dataProvider){
             logger.debug('Creating filter');
@@ -49,8 +51,32 @@ class ServiceService {
         return service;
     }
 
-    static * createServices(data){
+    static * addDocMicroservice(data){
+        logger.info('Registering in microservice collection');
+        logger.debug('Removing old microservice with same id %s', data.id);
+        yield Microservice.remove({id: data.id});
+
+        yield new Microservice({
+            id: data.id,
+            swagger: data.swagger
+        }).save();
+
+    }
+
+    static * registerMicroservices(data){
         logger.info('Saving services');
+        var exist = yield Service.find({
+            id: data.id
+        }).exec();
+
+        if (exist && exist.length > 0) {
+            logger.debug('Service exist. Remove olds...');
+            yield Service.find({
+                id: data.id
+            }).remove().exec();
+            logger.debug('Remove correct.');
+        }
+
         let services = [];
         if(data && data.urls){
             for(let i= 0, length = data.urls.length; i < length; i++){
@@ -67,6 +93,9 @@ class ServiceService {
 
             }
         }
+
+        yield ServiceService.addDocMicroservice(data);
+
         logger.info('Save correct');
         return services;
     }

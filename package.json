@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Basic api gateway",
   "main": "index.js",
-  "scripts":{
-      "test-e2e": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js e2eTest",
-      "test-unit": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js unitTest",
-      "start": "NODE_PATH=app/src node app/index",
-      "test": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js test"
+  "scripts": {
+    "test-e2e": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js e2eTest",
+    "test-unit": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js unitTest",
+    "start": "NODE_PATH=app/src node app/index",
+    "test": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js test"
   },
   "keywords": [
     "api-gateway",
@@ -21,11 +21,14 @@
   },
   "dependencies": {
     "bunyan": "1.7.1",
+    "co": "4.6.0",
     "co-request": "1.0.0",
     "config": "1.19.0",
     "jsonapi-serializer": "2.1.1",
+    "kcors": "1.1.0",
     "koa": "1.2.0",
     "koa-basic-auth": "1.1.2",
+    "koa-body": "1.4.0",
     "koa-bodyparser": "2.0.1",
     "koa-logger": "1.3.0",
     "koa-mount": "1.3.0",
@@ -34,11 +37,11 @@
     "mongoose": "4.4.6",
     "mongoose-regexp": "0.0.1",
     "path-to-regexp": "1.2.1",
+    "restler": "3.4.0",
     "slug": "0.9.1",
     "thunks": "4.1.3",
     "url": "0.11.0",
-    "koa-body": "1.4.0",
-    "restler": "3.4.0"
+    "yaml-js": "0.1.3"
   },
   "devDependencies": {
     "co-mocha": "1.1.2",
