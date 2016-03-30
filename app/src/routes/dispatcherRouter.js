@@ -18,9 +18,13 @@ var ALLOWED_HEADERS = [
 ];
 
 var getHeadersFromResponse = function(response) {
-    return _.omit(response.headers, function(value, key) {
-        return ALLOWED_HEADERS.indexOf(key.toLowerCase()) > -1;
+    var validHeaders = {};
+    _.each(response.headers, function(value, key) {
+        if (ALLOWED_HEADERS.indexOf(key.toLowerCase()) > -1) {
+          validHeaders[key] = value;
+        }
     });
+    return validHeaders;
 };
 
 class DispatcherRouter {
