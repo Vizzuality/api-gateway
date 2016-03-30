@@ -18,7 +18,7 @@ var ALLOWED_HEADERS = [
 ];
 
 var getHeadersFromResponse = function(response) {
-    return _.pick(response.headers, function(value, key) {
+    return _.omit(response.headers, function(value, key) {
         return ALLOWED_HEADERS.indexOf(key.toLowerCase()) > -1;
     });
 };
