@@ -32,7 +32,6 @@ var post = function(url, options, json){
         if(json){
             wrapperOut(rest.postJson(url, options.data, options), callback);
         }else{
-            logger.debug('Send multipar');
             wrapperOut(rest.post(url, options), callback);
         }
     };
@@ -62,7 +61,6 @@ var patch = function(url, options, json){
 };
 
 module.exports =  function(config){
-    logger.debug('Entra en restCo');
     var uri = config.uri;
     var method = config.method;
     delete config.uri;
@@ -84,7 +82,7 @@ module.exports =  function(config){
         case 'GET':
             return get(uri, config, isJsonRequest);
         default:
-            logger.warn('Method not specified');
+            logger.warn('Method not specified. Send GET');
             return get(uri, config, isJsonRequest);
     }
     return post(uri, config);
