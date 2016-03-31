@@ -62,6 +62,7 @@ var patch = function(url, options, json){
 };
 
 module.exports =  function(config){
+    logger.debug('Entra en restCo');
     var uri = config.uri;
     var method = config.method;
     delete config.uri;

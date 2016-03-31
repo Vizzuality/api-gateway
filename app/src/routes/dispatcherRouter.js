@@ -55,6 +55,7 @@ class DispatcherRouter {
             logger.debug('Send request');
             logger.debug(requests);
             requests = requests.map(function(requestConfig) {
+                logger.debug('RestCOOOOOOO');
                 return restCo(requestConfig);
             });
             let result = yield requests;
