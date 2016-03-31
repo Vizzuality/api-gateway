@@ -53,9 +53,7 @@ class DispatcherRouter {
         }
         try {
             logger.debug('Send request');
-            logger.debug(requests);
             requests = requests.map(function(requestConfig) {
-                logger.debug('RestCOOOOOOO');
                 return restCo(requestConfig);
             });
             let result = yield requests;
@@ -73,7 +71,7 @@ class DispatcherRouter {
                 let files = Object.keys(this.request.body.files);
                 for( let i=0, length= files.length; i < length; i++){
                     logger.debug('Removing file  %s', this.request.body.files[files[i]].path);
-                    // yield unlink(this.request.body.files[files[i]].path);
+                    yield unlink(this.request.body.files[files[i]].path);
                 }
             }
         }

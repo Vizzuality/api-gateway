@@ -68,15 +68,10 @@ module.exports =  function(config){
     delete config.uri;
     delete config.method;
 
-    logger.debug('Config multipar', config.multipart);
-    logger.debug('config', config);
-
     var isJsonRequest = !config.multipart;
-    logger.debug('config222222');
     if (config.json !== undefined) {
       isJsonRequest = config.json;
     }
-    logger.debug('IS JSON ', isJsonRequest);
     switch (method.toUpperCase()) {
         case 'DELETE':
             return del(uri, config, isJsonRequest);
