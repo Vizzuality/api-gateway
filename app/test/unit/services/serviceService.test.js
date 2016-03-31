@@ -77,6 +77,7 @@ describe('Service service', function () {
         var serviceMock = function (data) {
             this.data = data;
         };
+
         serviceMock.prototype.save = function () {
 
             return function (callback) {
@@ -84,13 +85,54 @@ describe('Service service', function () {
                 callback(null, this.data);
             }.bind(this);
         };
+
+        serviceMock.find = function () {
+
+            return function (callback) {
+
+                callback(null, null);
+            }.bind(this);
+        };
+        var filterMock = function (data) {
+            this.data = data;
+        };
+        filterMock.prototype.save = function () {
+
+            return function (callback) {
+                this.data._id = 'asds9a7asdf6asdf8';
+                callback(null, this.data);
+            }.bind(this);
+        };
+        filterMock.remove = function(){
+            return function (callback) {
+
+                callback(null, null);
+            };
+        };
+
+        var microserviceMock = function (data) {
+            this.data = data;
+        };
+        microserviceMock.remove = function(){
+            return function(callback){
+                callback(null, null);
+            };
+        };
+        microserviceMock.prototype.save = function(){
+            var _this = this;
+            return function(callback){
+                callback(null, _this);
+            };
+        };
         mockery.registerMock('models/service', serviceMock);
+        mockery.registerMock('models/filter', filterMock);
+        mockery.registerMock('models/microservice', microserviceMock);
         ServiceService = require('services/serviceService');
     });
 
     it('Test save correct without params in url', function* () {
 
-        let results = yield ServiceService.createServices(requestBody);
+        let results = yield ServiceService.registerMicroservices(requestBody);
         results.should.be.a.Array();
         results.should.length(1);
         let service = results[0];
@@ -104,7 +146,7 @@ describe('Service service', function () {
 
     it('Test save correct with params in url', function* () {
 
-        let results = yield ServiceService.createServices(requestWithParamsServices);
+        let results = yield ServiceService.registerMicroservices(requestWithParamsServices);
         results.should.be.a.Array();
         results.should.length(1);
         let service = results[0];

@@ -3,18 +3,6 @@
         "name": "API-Gateway",
         "level": "info",
         "toFile": true,
-        "dirLogFile": "/var/logs/api_gateway.log"
-    },
-    "server": {
-        "port": null
-    },
-    "mongodb":{
-        "uri": null,
-        "uri": null,
-        "database": null,
-        "host": null
-    },
-    "oldAPI":{
-        "url":"http://staging.api-staging.globalforestwatch.org"
+        "dirLogFile": "./logs/api_gateway.log"
     }
 }

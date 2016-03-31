@@ -1,0 +1,22 @@
+{
+    "mongodb": {
+        "database": "api_gateway_db",
+        "host": "127.0.0.1",
+        "port": 27017
+    },
+    "oldAPI": {
+        "url": "https://testingadrianapi-dot-gfw-apis.appspot.com"
+    },
+    "providers": {
+        "dataset": "/dataset/:dataset"
+    },
+    "logger": {
+        "name": "API-Gateway-DEV",
+        "level": "debug",
+        "toFile": false,
+        "dirLogFile": null
+    },
+    "server": {
+        "port": 8000
+    }
+}

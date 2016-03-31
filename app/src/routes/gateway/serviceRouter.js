@@ -4,6 +4,8 @@ var Router = require('koa-router');
 var logger = require('logger');
 var ServiceService = require('services/serviceService');
 var Service = require('models/service');
+var Filter = require('models/filter');
+var Microservice = require('models/microservice');
 var ServiceValidator = require('validators/serviceValidator');
 var router = new Router({
     prefix: '/service'
@@ -13,43 +15,49 @@ var router = new Router({
 class RegisterRouter {
 
     static * getServices() {
-        logger.debug('Getting register');
+        logger.debug('Getting register services');
         this.body = yield Service.find({}, {
             '__v': 0,
+            '_id': 0,
             'endpoints._id': 0
         }).exec();
     }
     static * register() {
         logger.info('Registering service', this.request.body);
-        var exist = yield Service.find({
-            id: this.request.body.id
-        }).exec();
-        var services = null;
-        if(!exist || exist.length === 0) {
-            services = yield ServiceService.createServices(this.request.body);
+        let services = yield ServiceService.registerMicroservices(this.request.body);
 
-            this.body = services;
-        } else {
-            logger.debug('Service exist. Remove olds...');
-            yield Service.find({
-                id: this.request.body.id
-            }).remove().exec();
-            logger.debug('Remove correct.');
-            services = yield ServiceService.createServices(this.request.body);
-            this.body = services;
-        }
+        this.body = services;
+
     }
     static * unregister() {
         logger.info('Unregistering service ', this.params.id);
-        var remove = yield Service.find({
+        var service = yield Service.findOne({
             id: this.params.id
-        }).remove().exec();
-        this.body = remove;
+        });
+        let response = {
+            ok: 0
+        };
+        if(service){
+            response = yield Service.remove();
+            let countFilter = yield Filter.count({url:service.url});
+            if(countFilter === 1){
+                yield Filter.find({url: service.url}).remove();
+            }
+            yield Microservice.remove({id: this.params.id});
+        } else{
+            logger.error('Service not found');
+            this.throw(404, 'GeoStore not found');
+            return;
+        }
+
+        this.body = response;
     }
 
     static * unregisterAll() {
         logger.info('Unregistering all services');
         var remove = yield Service.remove({}).exec();
+        yield Filter.remove({}).exec();
+        yield Microservice.remove({id: {$ne: 'api-gateway'}});
         logger.debug(remove);
         this.body = remove;
     }

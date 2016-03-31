@@ -1,11 +1,15 @@
 'use strict';
 var config = require('config');
+var co = require('co');
+var yaml = require('yaml-js');
+var fs = require('fs');
 var logger = require('logger');
 var mongoose = require('mongoose');
 var mongoUri = process.env.MONGOLAB_URI || 'mongodb://' + config.get('mongodb.host') + ':' + config.get('mongodb.port') + '/' + config.get('mongodb.database');
 var auth = require('koa-basic-auth');
 var mount = require('koa-mount');
 var koa = require('koa');
+var cors = require('kcors');
 var path = require('path');
 var koaBody = require('koa-body')({
     multipart: true,
@@ -19,27 +23,28 @@ var koaBody = require('koa-body')({
     }
 });
 
-var app = koa();
 var ErrorSerializer = require('serializers/errorSerializer');
+var ServiceService = require('services/serviceService');
 
-var onDbReady = function (err) {
-    if(err) {
+var onDbReady = function(err) {
+    if (err) {
         logger.error(err);
         throw new Error(err);
     }
 
     var app = koa();
+    app.use(cors());
     //if dev environment then load koa-logger
-    if(process.env.NODE_ENV === 'dev') {
+    if (process.env.NODE_ENV === 'dev') {
         app.use(require('koa-logger')());
     }
 
-    if(process.env.BASIC_AUTH && process.env.BASIC_AUTH === 'on'){
-        app.use(function* (next) {
+    if (process.env.BASIC_AUTH && process.env.BASIC_AUTH === 'on') {
+        app.use(function*(next) {
             try {
                 yield next;
-            } catch(err) {
-                if(401 === err.status) {
+            } catch (err) {
+                if (401 === err.status) {
                     this.status = 401;
                     this.set('WWW-Authenticate', 'Basic');
                     this.body = 'Not authorized';
@@ -55,13 +60,13 @@ var onDbReady = function (err) {
     }
 
     //catch errors and send in jsonapi standard. Always return vnd.api+json
-    app.use(function* (next) {
+    app.use(function*(next) {
         try {
             yield next;
-        } catch(err) {
+        } catch (err) {
             this.status = err.status || 500;
-            this.body = ErrorSerializer.serializeError(this.status, err.message );
-            if(process.env.NODE_ENV === 'prod' && this.status === 500 ){
+            this.body = ErrorSerializer.serializeError(this.status, err.message);
+            if (process.env.NODE_ENV === 'prod' && this.status === 500) {
                 this.body = 'Unexpected error';
             }
             this.response.type = 'application/vnd.api+json';
@@ -73,13 +78,30 @@ var onDbReady = function (err) {
     app.use(koaBody);
     app.use(mount('/gateway', require('koa-validate')()));
     app.use(mount('/gateway', require('routes/gateway/serviceRouter').middleware()));
+
+    app.use(mount('/doc', require('routes/docRouter').middleware()));
+
     app.use(require('routes/dispatcherRouter').middleware());
+
 
     var server = require('http').Server(app.callback());
 
     var port = process.env.PORT || config.get('server.port');
 
     server.listen(port);
+
+    co(function*() {
+        logger.info('Add doc of the microservice');
+        try {
+            yield ServiceService.addDocMicroservice({
+                id: 'api-gateway',
+                swagger: yaml.load(fs.readFileSync(__dirname + '/../public-swagger.yml').toString())
+            });
+        } catch (e) {
+            logger.error(e);
+        }
+    });
+
     logger.info('API Gateway started in port:' + port);
 };
 

@@ -1,0 +1,279 @@
+swagger: '2.0'
+info:
+  title: API Gateway
+  description: API Gateway - API
+  version: "1.0.0"
+host: ec2-52-23-163-254.compute-1.amazonaws.com
+
+schemes:
+  - http
+
+produces:
+  - application/vnd.api+json
+  - application/json
+
+paths:
+  /gateway/service:
+    get:
+      description: Return all urls registered by the services
+      operationId: getServices
+      tags:
+        - Services
+      produces:
+        - application/json
+        - application/vnd.api+json
+      responses:
+        200:
+          description:  List all urls registered by the services
+          schema:
+            title: Services
+            type: array
+            items:
+              $ref: '#/definitions/ServiceUrl'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Errors'
+    post:
+      description: Register the urls of the service. If the id of the service exists, the existing configuration with the same id is removed.
+      operationId: register
+      tags:
+        - Services
+      produces:
+        - application/json
+        - application/vnd.api+json
+      parameters:
+        - name: service
+          in: body
+          description: Service to add
+          required: true
+          schema:
+            $ref: '#/definitions/Service'
+      responses:
+        200:
+          description:  List all urls registered by the service
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ServiceUrl'
+        400:
+          description: Validate error
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Errors'
+  /gateway/service/all:
+    delete:
+      description: Remove all Services of the database
+      operationId: unregisterAll
+      tags:
+        - Services
+      produces:
+        - application/json
+        - application/vnd.api+json
+      responses:
+        200:
+          description:  Number of services removed
+          schema:
+            $ref: '#/definitions/ServicesRemoved'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Errors'
+  /gateway/service/{id}:
+    delete:
+      description: Remove the service specified in the parameter
+      operationId: unregister
+      tags:
+        - Services
+      produces:
+        - application/json
+        - application/vnd.api+json
+      parameters:
+        - name: id
+          in: path
+          description: ID of service
+          required: true
+          type: string
+      responses:
+        200:
+          description:  Number of services removed
+          schema:
+            $ref: '#/definitions/ServicesRemoved'
+        404:
+          description: Service not found
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Errors'
+
+definitions:
+  Service:
+    type: object
+    description: Object with the data of the service and public urls
+    properties:
+      id:
+        type: string
+        description: id of the services
+      name:
+        type: string
+        description: Name of the services
+      urls:
+        type: array
+        description: Public urls
+        items:
+          properties:
+            url:
+              type: string
+              description: Url of the services
+            method:
+              type: string
+              description: Method of the url of the services
+            filters:
+              type: object
+              description: Object that contain the distinct filters that the api-gateway uses to filter the distinct endpoints. The key must be a key of the provider object.
+            dataProvider:
+              type: string
+              description: Specified the name of provider which the api-gateway uses to filter the endpoint with the filter defined in 'filters'. The url to obtain the provider object is configured in config files. Only possible 'dataset'
+            paramProvider:
+              type: string
+              description: Name of the param of the url that the api-gateway uses to obtain the provider object.
+            endpoints:
+              type: array
+              items:
+                $ref: '#/definitions/Endpoint'
+  ServiceUrl:
+    type: object
+    description: Data of the public url of the ServiceUrl
+    properties:
+      id:
+        type: string
+        description: id of the services
+      name:
+        type: string
+        description: Name of the services
+      url:
+        type: string
+        description: Url of the services
+      method:
+        type: string
+        description: Method of the url of the services
+      registerDate:
+        type: string
+        description: Date of the register of the service
+      filters:
+        type: object
+        description: Object that contain the distinct filters that the api-gateway uses to filter the distinct endpoints. The key must be a key of the provider object.
+      dataProvider:
+        type: string
+        description: Specified the name of provider which the api-gateway uses to filter the endpoint with the filter defined in 'filters'. The url to obtain the provider object is configured in config files. Only possible 'dataset'
+      paramProvider:
+        type: string
+        description: Name of the param of the url that the api-gateway uses to obtain the provider object.
+      endpoints:
+        type: array
+        items:
+          $ref: '#/definitions/Endpoint'
+      keys:
+        type: array
+        items:
+          type: string
+          description: list of keys obtained of the url (names of params in the url)
+    example:
+      id: cartoconnector-1.0
+      name: Carto Connector v1.0
+      url: /query/:idDataset
+      registerDate: 2016-03-30T13:43:33.510Z
+      dataProvider: dataset
+      paramProvider: idDataset
+      filters:
+        provider: CartoDb
+      endpoints:
+        method: POST
+        baseUrl: http://192.23.111.20:8080,
+        path: /query,
+        data:
+          - dataset
+  Endpoint:
+    type: object
+    description: Data of the endpoint (Private endpoints of the microservice)
+    properties:
+      baseUrl:
+        type: string
+        description: Base url of the service
+      path:
+        type: string
+        description: Path of the endpoint
+      data:
+        type: array
+        items:
+          type: string
+          description: Keys of the provider that the api gateway added to the request when api gateway send to the requesto to the microservice
+      method:
+        type: string
+        description: Method of the endpoint
+    example:
+      method: POST
+      baseUrl: http://192.23.111.20:8080,
+      path: /api/v1/users,
+      data:
+        - dataset
+  Errors:
+    type: object
+    description: Errors
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/Error'
+  ServicesRemoved:
+    type: object
+    description: Number of services removed
+    properties:
+      ok:
+        type: integer
+        format: int32
+        description: Number of services removed
+  Error:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: A unique identifier for this particular occurrence of the problem.
+      links:
+        type: object
+        description: A links object
+        properties:
+          about:
+            type: string
+            description: A link that leads to further details about this particular occurrence of the problem.
+      status:
+        type: string
+        description: The HTTP status code applicable to this problem, expressed as a string value
+      code:
+        type: string
+        description: An application-specific error code, expressed as a string value
+      title:
+        type: string
+        description: A short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
+      detail:
+        type: string
+        description: A human-readable explanation specific to this occurrence of the problem. Like title, this field's value can be localized
+      source:
+        type: object
+        description: An object containing references to the source of the error, optionally including any of the following members
+        properties:
+          pointer:
+            type: string
+            description: A JSON Pointer [RFC6901] to the associated entity in the request document
+          parameter:
+            type: string
+            description: A string indicating which URI query parameter caused the error.
+      meta:
+        type: object
+        description: A meta object containing non-standard meta-information about the error.

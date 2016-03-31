@@ -12,7 +12,7 @@ module.exports = (function() {
     if(config.get('logger.toFile')){
         streams.push({
             level: config.get('logger.level') || 'debug',
-            stream: config.get('logger.dirLogFile')
+            path: config.get('logger.dirLogFile')
         });
     }
     var logger = bunyan.createLogger({

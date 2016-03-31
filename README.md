@@ -8,9 +8,10 @@ which continues to service requests for endpoints that have not yet been
 rebuilt.
 
 1. [How does it work?](#how-does-it-work)
-2. [Getting Started](#getting-started)
-3. [Deployment](#deployment)
-4. [Documentation](#documentation)
+2. [Requirements](#requirements)
+3. [Executing](#executing)
+4. [Deployment](#deployment)
+5. [Documentation](#documentation)
 
 ## How does it work?
 
@@ -34,39 +35,52 @@ and making it aware that they are available to receive requests. There
 exists a [services REST API](docs/service_registry.md) that is used for
 this purpose.
 
-## Getting Started
+## Requirements
 
-### OS X
+The requirements for the API Gateway greatly depend on how you plan on running it. There are two ways to run the API:
+- Natively
+- Using [Docker](https://www.docker.com/) containers
 
-We're using Docker which, luckily for you, means that getting the
-application running locally should be fairly painless. First, make sure
-that you have [Docker Compose](https://docs.docker.com/compose/install/)
-installed on your machine.
+In both cases, you will need `git` to checkout the project.
 
-If you've not used Docker before, you may need to set up some defaults:
+### Requirements for native execution
 
-```
-docker-machine create --driver virtualbox default
-docker-machine start default
-eval $(docker-machine env default)
-```
+If you want to run the API Gateway natively, you will need to install and configure:
 
-Now we're ready to actually get the application running:
+- [Node.js and npm](https://nodejs.org/)
+- [MongoDB](https://www.mongodb.org/)
+
+### Requirements for docker
+
+If you are going to use containers, you will need:
+
+- [Docker](https://www.docker.com/)
+- [docker-compose](https://docs.docker.com/compose/)
+
+## Executing
+
+Start by checking out the project from github
 
 ```
 git clone https://github.com/Vizzuality/api-gateway.git
 cd api-gateway
+```
+
+Once this is done, you can either run the application natively, or inside a docker container. 
+If you decide to run it natively, you will need to first install the required npm libraries, and the start the application:
+
+```
 npm install
-npm run develop
+./gateway.sh start
 ```
 
-In case it's not obvious (it's not), grab your Docker machine's IP:
+If, on the other hand, you plan on using docker instead, you only need to fire up the containers
 
 ```
-docker-machine ip
+./gateway.sh develop
 ```
 
-The application will be running on port 8000.
+The application will be running on port 8000 of the corresponding host (typically localhost)
 
 ## Deployment
 
