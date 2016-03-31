@@ -11,7 +11,7 @@ class ServiceService {
     static * saveService(data){
         logger.debug('Saving service ', data);
         logger.debug('Removing old filter with same url %s', data.url);
-        yield Filter.find({url: data.url, method: data.method}).remove().exec();
+        yield Filter.remove({url: data.url, method: data.method});
 
         let keys = [];
         let regex = pathToRegexp(data.url, keys);
@@ -67,13 +67,13 @@ class ServiceService {
         logger.info('Saving services');
         var exist = yield Service.find({
             id: data.id
-        }).exec();
+        });
 
         if (exist && exist.length > 0) {
             logger.debug('Service exist. Remove olds...');
-            yield Service.find({
+            yield Service.remove({
                 id: data.id
-            }).remove().exec();
+            });
             logger.debug('Remove correct.');
         }
 

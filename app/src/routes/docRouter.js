@@ -6,7 +6,6 @@ var Microservice = require('models/microservice');
 var YAML = require('yaml-js');
 
 var router = new Router({
-    prefix: '/doc'
 });
 
 
@@ -43,6 +42,6 @@ class DocRouter {
 
 }
 
-router.get('/', DocRouter.getDoc);
+router.get('/swagger', DocRouter.getDoc);
 
 module.exports = router;

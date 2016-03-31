@@ -60,3 +60,9 @@ To unregister all services:
 To obtain a JSON list of all services registered:
 
 **GET /gateway/service**
+
+## Swagger API Documentation
+
+To obtain a swagger specification of all endpoints registered:
+
+**GET /doc/swagger**
