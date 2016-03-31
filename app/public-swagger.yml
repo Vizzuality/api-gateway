@@ -17,6 +17,8 @@ paths:
     get:
       description: Return all urls registered by the services
       operationId: getServices
+      tags:
+        - Services
       produces:
         - application/json
         - application/vnd.api+json
@@ -35,6 +37,8 @@ paths:
     post:
       description: Register the urls of the service. If the id of the service exists, the existing configuration with the same id is removed.
       operationId: register
+      tags:
+        - Services
       produces:
         - application/json
         - application/vnd.api+json
@@ -64,6 +68,8 @@ paths:
     delete:
       description: Remove all Services of the database
       operationId: unregisterAll
+      tags:
+        - Services
       produces:
         - application/json
         - application/vnd.api+json
@@ -80,6 +86,8 @@ paths:
     delete:
       description: Remove the service specified in the parameter
       operationId: unregister
+      tags:
+        - Services
       produces:
         - application/json
         - application/vnd.api+json

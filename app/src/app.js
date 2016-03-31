@@ -95,7 +95,7 @@ var onDbReady = function(err) {
         try {
             yield ServiceService.addDocMicroservice({
                 id: 'api-gateway',
-                swagger: yaml.load(fs.readFileSync(__dirname + '/../swagger.yml').toString())
+                swagger: yaml.load(fs.readFileSync(__dirname + '/../public-swagger.yml').toString())
             });
         } catch (e) {
             logger.error(e);
