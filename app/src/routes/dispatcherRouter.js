@@ -72,7 +72,7 @@ class DispatcherRouter {
                 let files = Object.keys(this.request.body.files);
                 for( let i=0, length= files.length; i < length; i++){
                     logger.debug('Removing file  %s', this.request.body.files[files[i]].path);
-                    yield unlink(this.request.body.files[files[i]].path);
+                    // yield unlink(this.request.body.files[files[i]].path);
                 }
             }
         }

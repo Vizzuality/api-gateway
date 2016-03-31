@@ -133,6 +133,7 @@ class DispatcherService {
                     logger.debug('Adding files');
                     let formData = {};
                     for (let key in files) {
+                        logger.debug('Adding file ', files[key].path);
                         formData[key] = rest.file(files[key].path);
                     }
                     configRequest.data = Object.assign(configRequest.data || {}, formData);

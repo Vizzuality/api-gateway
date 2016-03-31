@@ -32,6 +32,7 @@ var post = function(url, options, json){
         if(json){
             wrapperOut(rest.postJson(url, options.data, options), callback);
         }else{
+            logger.debug('Send multipar');
             wrapperOut(rest.post(url, options), callback);
         }
     };
@@ -74,7 +75,7 @@ module.exports =  function(config){
     if (config.json !== undefined) {
       isJsonRequest = config.json;
     }
-
+    logger.debug('IS JSON ', isJsonRequest);
     switch (method.toUpperCase()) {
         case 'DELETE':
             return del(uri, config, isJsonRequest);
