@@ -12,11 +12,18 @@ produces:
   - application/vnd.api+json
   - application/json
 
+securityDefinitions:
+  basic_auth:
+    type: basic
+    description: to read/modify any data related to services
+
 paths:
   /gateway/service:
     get:
       description: Return all urls registered by the services
       operationId: getServices
+      security:
+        - basic_auth: []
       tags:
         - Services
       produces:
@@ -37,6 +44,8 @@ paths:
     post:
       description: Register the urls of the service. If the id of the service exists, the existing configuration with the same id is removed.
       operationId: register
+      security:
+        - basic_auth: []
       tags:
         - Services
       produces:
@@ -68,6 +77,8 @@ paths:
     delete:
       description: Remove all Services of the database
       operationId: unregisterAll
+      security:
+        - basic_auth: []
       tags:
         - Services
       produces:
@@ -86,6 +97,8 @@ paths:
     delete:
       description: Remove the service specified in the parameter
       operationId: unregister
+      security:
+        - basic_auth: []
       tags:
         - Services
       produces:
