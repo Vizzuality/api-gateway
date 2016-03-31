@@ -119,8 +119,7 @@ class DispatcherService {
                 let url = yield DispatcherService.buildUrl(parsedUrl.pathname, endpoint.path, service);
                 configRequest = {
                     uri: endpoint.baseUrl + url,
-                    method: endpoint.method,
-                    json: true
+                    method: endpoint.method
                 };
                 if (queryParams) {
                     configRequest.uri = configRequest.uri + queryParams;

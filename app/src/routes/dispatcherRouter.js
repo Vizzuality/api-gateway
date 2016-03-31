@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var Router = require('koa-router');
 var logger = require('logger');
 var request = require('co-request');
@@ -13,6 +14,23 @@ var unlink = function(file) {
     return function(callback) {
         fs.unlink(file, callback);
     };
+};
+
+var ALLOWED_HEADERS = [
+  'access-control-allow-origin',
+  'access-control-allow-headers',
+  'cache-control',
+  'charset'
+];
+
+var getHeadersFromResponse = function(response) {
+    var validHeaders = {};
+    _.each(response.headers, function(value, key) {
+        if (ALLOWED_HEADERS.indexOf(key.toLowerCase()) > -1) {
+          validHeaders[key] = value;
+        }
+    });
+    return validHeaders;
 };
 
 class DispatcherRouter {
@@ -35,15 +53,15 @@ class DispatcherRouter {
         }
         try {
             logger.debug('Send request');
-            requests = requests.map(function(requestConfig, i) {
+            requests = requests.map(function(requestConfig) {
                 return restCo(requestConfig);
             });
             let result = yield requests;
 
+            this.set(getHeadersFromResponse(result[0].response));
             this.status = result[0].response.statusCode;
             this.body = result[0].body;
             this.response.type = result[0].response.headers['content-type'];
-
         } catch (e) {
             logger.error(e);
             this.throw(500, 'Unexpected error');

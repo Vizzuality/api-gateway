@@ -76,7 +76,6 @@ describe('Distpatcher service', function () {
             let request = requests[0];
             request.should.have.property('uri');
             request.should.have.property('method');
-            request.should.have.property('json');
             request.method.should.have.equal(service.endpoints[0].method);
             request.uri.should.have.equal(service.endpoints[0].baseUrl + service.endpoints[0].path);
         });
