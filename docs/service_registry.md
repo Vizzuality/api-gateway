@@ -13,6 +13,7 @@ To register service:
 {{
     "id": "#(service.id)",
     "name": "#(service.name)",
+    "swagger": {public-swagger} // Public doc of the public api of the service in swagger standard
     "urls": [{
         "url": "/usuarios",
         "method": "GET",
