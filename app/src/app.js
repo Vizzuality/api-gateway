@@ -1,7 +1,7 @@
 'use strict';
 var config = require('config');
 var co = require('co');
-var YAML = require('yaml-js');
+var yaml = require('yaml-js');
 var fs = require('fs');
 var logger = require('logger');
 var mongoose = require('mongoose');
@@ -95,7 +95,7 @@ var onDbReady = function(err) {
         try {
             yield ServiceService.addDocMicroservice({
                 id: 'api-gateway',
-                swagger: YAML.load(fs.readFileSync(__dirname + '/../swagger.yml').toString())
+                swagger: yaml.load(fs.readFileSync(__dirname + '/../swagger.yml').toString())
             });
         } catch (e) {
             logger.error(e);
