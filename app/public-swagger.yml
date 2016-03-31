@@ -3,10 +3,10 @@ info:
   title: API Gateway
   description: API Gateway - API
   version: "1.0.0"
-host: api.rw.com
+host: ec2-52-23-163-254.compute-1.amazonaws.com
 
 schemes:
-  - https
+  - http
 
 produces:
   - application/vnd.api+json
