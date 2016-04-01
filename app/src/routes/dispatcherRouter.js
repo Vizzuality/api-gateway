@@ -63,8 +63,14 @@ class DispatcherRouter {
             this.body = result[0].body;
             this.response.type = result[0].response.headers['content-type'];
         } catch (e) {
-            logger.error(e);
-            this.throw(500, 'Unexpected error');
+            logger.error('Error to request', e);
+            if(e.errors && e.errors.length > 0 && e.errors[0].status >= 400 && e.errors[0].status < 500){
+                this.status = e.errors[0].status;
+                this.body = e.errors[0];
+            } else {
+                this.throw(500, 'Unexpected error');
+            }
+
         } finally {
             if(this.request.body.files){
                 logger.debug('Removing files');

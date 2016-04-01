@@ -135,6 +135,9 @@ definitions:
       name:
         type: string
         description: Name of the services
+      swagger:
+        type: object
+        description: Swagger object with the public api of the service
       urls:
         type: array
         description: Public urls
