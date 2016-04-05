@@ -64,9 +64,9 @@ class DispatcherRouter {
             this.response.type = result[0].response.headers['content-type'];
         } catch (e) {
             logger.error('Error to request', e);
-            if (e.body && e.body.errors && e.body.errors.length > 0 && e.body.errors[0].status >= 400 && e.body.errors[0].status < 500) {
-                this.status = e.body.errors[0].status;
-                this.body = e.body.errors[0];
+            if (e.body && e.body.errors && e.body.errors.length > 0 && e.response && e.response.statusCode >= 400 && e.response.statusCode < 500) {
+                this.status = e.response.statusCode;
+                this.body = e.body;
             } else {
                 this.throw(500, 'Unexpected error');
             }
