@@ -38,7 +38,7 @@ class RegisterRouter {
             ok: 0
         };
         if(service){
-            response = yield Service.remove();
+            response = yield service.remove();
             let countFilter = yield Service.count({url:service.url});
             if(countFilter === 1){
                 yield Filter.remove({url: service.url});
