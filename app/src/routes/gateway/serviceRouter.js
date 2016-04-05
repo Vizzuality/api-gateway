@@ -38,10 +38,10 @@ class RegisterRouter {
             ok: 0
         };
         if(service){
-            response = yield service.remove();
-            let countFilter = yield Service.count({url:service.url});
-            if(countFilter === 0){
-                yield Filter.remove({url: service.url});
+            response = yield Service.remove();
+            let countFilter = yield Filter.count({url:service.url});
+            if(countFilter === 1){
+                yield Filter.find({url: service.url}).remove();
             }
             yield Microservice.remove({id: this.params.id});
         } else{
@@ -55,8 +55,8 @@ class RegisterRouter {
 
     static * unregisterAll() {
         logger.info('Unregistering all services');
-        var remove = yield Service.remove({});
-        yield Filter.remove({});
+        var remove = yield Service.remove({}).exec();
+        yield Filter.remove({}).exec();
         yield Microservice.remove({id: {$ne: 'api-gateway'}});
         logger.debug(remove);
         this.body = remove;

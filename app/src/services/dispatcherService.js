@@ -65,7 +65,7 @@ class DispatcherService {
             throw new ServiceNotFound('Not found services to url:' + url);
 
         } catch (e) {
-            if ((e.response && e.response.statusCode === 404) || e instanceof ServiceNotFound) {
+            if (e.status === 404) {
                 throw new ServiceNotFound('Not found services to url:' + url);
             } else {
                 logger.error('Error to request', e);
