@@ -17,17 +17,17 @@ var unlink = function(file) {
 };
 
 var ALLOWED_HEADERS = [
-  'access-control-allow-origin',
-  'access-control-allow-headers',
-  'cache-control',
-  'charset'
+    'access-control-allow-origin',
+    'access-control-allow-headers',
+    'cache-control',
+    'charset'
 ];
 
 var getHeadersFromResponse = function(response) {
     var validHeaders = {};
     _.each(response.headers, function(value, key) {
         if (ALLOWED_HEADERS.indexOf(key.toLowerCase()) > -1) {
-          validHeaders[key] = value;
+            validHeaders[key] = value;
         }
     });
     return validHeaders;
@@ -63,13 +63,20 @@ class DispatcherRouter {
             this.body = result[0].body;
             this.response.type = result[0].response.headers['content-type'];
         } catch (e) {
-            logger.error(e);
-            this.throw(500, 'Unexpected error');
+            logger.error('Error to request', e);
+            if (e.body && e.body.errors && e.body.errors.length > 0 && e.body.errors[0].status >= 400 && e.body.errors[0].status < 500) {
+                this.status = e.body.errors[0].status;
+                this.body = e.body.errors[0];
+
+            } else {
+                this.throw(500, 'Unexpected error');
+            }
+
         } finally {
-            if(this.request.body.files){
+            if (this.request.body.files) {
                 logger.debug('Removing files');
                 let files = Object.keys(this.request.body.files);
-                for( let i=0, length= files.length; i < length; i++){
+                for (let i = 0, length = files.length; i < length; i++) {
                     logger.debug('Removing file  %s', this.request.body.files[files[i]].path);
                     yield unlink(this.request.body.files[files[i]].path);
                 }
