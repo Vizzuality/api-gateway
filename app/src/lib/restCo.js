@@ -66,15 +66,10 @@ module.exports =  function(config){
     delete config.uri;
     delete config.method;
 
-    // Google App Engine has issues with Host headers, so we just drop
-    // it completely as most requests do not depend on it
-    delete config.headers.host;
-
     var isJsonRequest = !config.multipart;
     if (config.json !== undefined) {
       isJsonRequest = config.json;
     }
-
     switch (method.toUpperCase()) {
         case 'DELETE':
             return del(uri, config, isJsonRequest);
@@ -87,7 +82,7 @@ module.exports =  function(config){
         case 'GET':
             return get(uri, config, isJsonRequest);
         default:
-            logger.warn('Method not specified');
+            logger.warn('Method not specified. Send GET');
             return get(uri, config, isJsonRequest);
     }
     return post(uri, config);
