@@ -39,9 +39,9 @@ class RegisterRouter {
         };
         if(service){
             response = yield Service.remove();
-            let countFilter = yield Filter.count({url:service.url});
+            let countFilter = yield Service.count({url:service.url});
             if(countFilter === 1){
-                yield Filter.find({url: service.url}).remove();
+                yield Filter.remove({url: service.url});
             }
             yield Microservice.remove({id: this.params.id});
         } else{
