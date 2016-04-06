@@ -37,14 +37,22 @@ class RegisterRouter {
         let response = {
             ok: 0
         };
-        if(service){
-            response = yield Service.remove();
-            let countFilter = yield Filter.count({url:service.url});
-            if(countFilter === 1){
-                yield Filter.find({url: service.url}).remove();
+        if (service) {
+            response = yield Service.remove({
+                id: this.params.id
+            });
+            let countUrl = yield Service.count({
+                url: service.url
+            });
+            if (countUrl === 0) {
+                yield Filter.remove({
+                    url: service.url
+                });
             }
-            yield Microservice.remove({id: this.params.id});
-        } else{
+            yield Microservice.remove({
+                id: this.params.id
+            });
+        } else {
             logger.error('Service not found');
             this.throw(404, 'GeoStore not found');
             return;
@@ -57,7 +65,11 @@ class RegisterRouter {
         logger.info('Unregistering all services');
         var remove = yield Service.remove({}).exec();
         yield Filter.remove({}).exec();
-        yield Microservice.remove({id: {$ne: 'api-gateway'}});
+        yield Microservice.remove({
+            id: {
+                $ne: 'api-gateway'
+            }
+        });
         logger.debug(remove);
         this.body = remove;
     }
