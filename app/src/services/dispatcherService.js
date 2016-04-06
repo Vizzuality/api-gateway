@@ -7,6 +7,7 @@ var pathToRegexp = require('path-to-regexp');
 var Service = require('models/service');
 var Filter = require('models/filter');
 var ServiceNotFound = require('errors/serviceNotFound');
+var NotAuthorized = require('errors/notAuthorized');
 var rest = require('restler');
 var restCo = require('lib/restCo');
 
@@ -74,7 +75,7 @@ class DispatcherService {
         }
     }
 
-    static * getRequests(sourceUrl, sourceMethod, body, headers, queryParams, files) {
+    static * getRequests(sourceUrl, sourceMethod, body, headers, queryParams, files, userAuth) {
         logger.debug('Obtaining config request to url %s and queryParams %s', sourceUrl, queryParams);
         var parsedUrl = url.parse(sourceUrl);
         logger.debug('Checking if exist in filters the url %s', sourceUrl);
@@ -111,6 +112,12 @@ class DispatcherService {
         var service = yield Service.findOne(findFilters);
         logger.debug('Service obtained: ', service);
         let configRequest = null;
+        if(service){
+            logger.info('Checking if the request is authenticated');
+            if(service.authenticated && !userAuth){
+                throw new NotAuthorized(sourceUrl + ': login required'); 
+            }
+        }
         if (service && service.endpoints) {
             for (let i = 0, length = service.endpoints.length; i < length; i++) {
                 let endpoint = service.endpoints[i];

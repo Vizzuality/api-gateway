@@ -53,6 +53,11 @@ var API = (function() {
     var success = function *(){
         this.body = this.req.user;
     };
+    
+    var logout = function *(){
+        this.logout();
+        this.body = 'ok';
+    };
 
     return {
         twitter: twitter,
@@ -63,7 +68,8 @@ var API = (function() {
         facebookCallback: facebookCallback,
         failAuth: failAuth,
         checkLogged: checkLogged,
-        success: success
+        success: success,
+        logout: logout
     };
 }());
 
@@ -84,5 +90,7 @@ ApiRouter.get('/fail', API.failAuth);
 ApiRouter.get('/checkLogged', API.checkLogged);
 
 ApiRouter.get('/success', API.success);
+
+ApiRouter.get('/logout', API.logout);
 
 module.exports = ApiRouter;

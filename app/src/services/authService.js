@@ -13,38 +13,7 @@ module.exports = function() {
                 provider: profile.provider,
                 providerId: profile.id
             });
-            //TODO: Do request to User microservice ==> POST /user/createOrGet
             done(null, user);
-            // try {
-            //     var userExist = yield User.findOne({
-            //         provider: profile.provider,
-            //         providerId: profile.id
-            //     });
-            //     if (!userExist) {
-            //         logger.debug(profile);
-            //         var user = {
-            //             fullName: profile.displayName,
-            //             provider: profile.provider,
-            //             providerId: profile.id,
-
-            //             createdAt: new Date()
-            //         };
-            //         if (profile.emails) {
-            //             user.email = profile.emails[0].value;
-            //         }
-
-            //         logger.debug('User to register', user);
-            //         userExist = yield new User(user).save();
-
-            //     } else {
-            //         logger.debug('Yet exist user.');
-            //     }
-
-            //     done(null, userExist);
-            // } catch (e) {
-            //     logger.error(e);
-            //     done(new Error('Error login user'), null);
-            // }
         });
     };
 
@@ -52,16 +21,16 @@ module.exports = function() {
         logger.debug('SERIALIZE USER\n\n\n\n');
         logger.debug(user);
         logger.debug('FIN SERIALIZE USER\n\n\n\n');
-        done(null, user._id);
+        done(null, user);
     });
 
-    passport.deserializeUser(function(id, done) {
+    passport.deserializeUser(function(user, done) {
         co(function*() {
             logger.debug('DESERIALIZE USER\n\n\n\n');
-            logger.debug(id);
+            // logger.debug(id);
             logger.debug('FIN DESERIALIZE USER\n\n\n\n');
 
-            var user = yield UserService.getUserById(id);
+            // var user = yield UserService.getUserById(id);
 
             done(null, user);
         });
