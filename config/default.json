@@ -23,21 +23,5 @@
             "domain": "globalforestwatch.dev"
         },
         "sessionKey": "globalforestwatch-key"
-    },
-    "auth": {
-        "google": {
-            "clientID": "",
-            "clientSecret": "",
-            "scope": "https://www.googleapis.com/auth/plus.me"
-        },
-        "facebook": {
-            "clientID": "",
-            "clientSecret": "",
-            "scope": "email"
-        },
-        "twitter": {
-            "consumerKey": "fqsUAkAYBlKAHwXMhrDPayopo",
-            "consumerSecret": "XKHJPOdTnksU3A0QfNCEVre5gMNgnZyYaY8wIEZV51JasBMplj"
-        }
     }
 }
