@@ -18,20 +18,12 @@ module.exports = function() {
     };
 
     passport.serializeUser(function(user, done) {
-        logger.debug('SERIALIZE USER\n\n\n\n');
-        logger.debug(user);
-        logger.debug('FIN SERIALIZE USER\n\n\n\n');
         done(null, user);
     });
 
     passport.deserializeUser(function(user, done) {
-        co(function*() {
-            logger.debug('DESERIALIZE USER\n\n\n\n');
-            // logger.debug(id);
-            logger.debug('FIN DESERIALIZE USER\n\n\n\n');
-
+        co(function*() {            
             // var user = yield UserService.getUserById(id);
-
             done(null, user);
         });
 
