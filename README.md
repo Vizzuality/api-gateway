@@ -114,6 +114,27 @@ Authentication:
 * `BASIC_AUTH_USERNAME`: username
 * `BASIC_AUTH_PASSWORD`: password
 
+To config oauth providers (twitter, facebook and google) is necesary create a file 'auth.json' in the config folder, with the next structure:
+````
+{
+    "google": {
+        "clientID": "<clientIdGoogle>",
+        "clientSecret": "<clientSecretGoogle>",
+        "scope": "https://www.googleapis.com/auth/plus.me"
+    },
+    "facebook": {
+        "clientID": "<clientIdFacebook>",
+        "clientSecret": "<clientSecretFacebook>",
+        "scope": "email"
+    },
+    "twitter": {
+        "consumerKey": "<consumerKeyTwitter>",
+        "consumerSecret": "<consumerSecretTwitter>"
+    }
+
+}
+```
+
 ## Documentation
 
 The services are documented using [Swagger](http://swagger.io/) specifications.
