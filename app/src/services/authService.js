@@ -1,19 +1,20 @@
 'use strict';
 var passport = require('koa-passport');
 var config = require('config');
+var auth = require(__dirname + '/../../../config/auth.json');
 var co = require('co');
 var logger = require('logger');
-var User = require('models/user');
-var DispatcherService = require('services/dispatcherService');
+var UserService = require('services/userService');
 module.exports = function() {
 
     var registerUser = function(accessToken, refreshToken, profile, done) {
         co(function*() {
-            //TODO: Do request to User microservice ==> POST /user/createOrGet
-            done(null, {
+            let user = yield UserService.createOrGetUser({
                 provider: profile.provider,
                 providerId: profile.id
             });
+            //TODO: Do request to User microservice ==> POST /user/createOrGet
+            done(null, user);
             // try {
             //     var userExist = yield User.findOne({
             //         provider: profile.provider,
@@ -60,18 +61,17 @@ module.exports = function() {
             logger.debug(id);
             logger.debug('FIN DESERIALIZE USER\n\n\n\n');
 
-            var user = yield User.findById(id);
+            var user = yield UserService.getUserById(id);
 
             done(null, user);
         });
 
     });
 
-
-    var FacebookStrategy = require('passport-facebook').Strategy;
+ var FacebookStrategy = require('passport-facebook').Strategy;
     passport.use(new FacebookStrategy({
-            clientID: config.get('auth.facebook.clientID'),
-            clientSecret: config.get('auth.facebook.clientSecret'),
+            clientID: auth.facebook.clientID,
+            clientSecret: auth.facebook.clientSecret,
             callbackURL: config.get('server.publicUrl') + '/auth/facebook/callback'
         },
         registerUser
@@ -79,8 +79,8 @@ module.exports = function() {
 
     var TwitterStrategy = require('passport-twitter').Strategy;
     passport.use(new TwitterStrategy({
-            consumerKey: config.get('auth.twitter.consumerKey'),
-            consumerSecret: config.get('auth.twitter.consumerSecret'),
+            consumerKey: auth.twitter.consumerKey,
+            consumerSecret: auth.twitter.consumerSecret,
             callbackURL: config.get('server.publicUrl') + '/auth/twitter/callback'
         },
         registerUser
@@ -89,8 +89,8 @@ module.exports = function() {
     var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
     passport.use(new GoogleStrategy({
-            clientID: config.get('auth.google.clientID'),
-            clientSecret: config.get('auth.google.clientSecret'),
+            clientID: auth.google.clientID,
+            clientSecret: auth.google.clientSecret,
             callbackURL: config.get('server.publicUrl') + '/auth/google/callback'
         },
         registerUser

@@ -4,7 +4,7 @@ var Router = require('koa-router');
 var config = require('config');
 var ApiRouter = new Router();
 var passport = require('koa-passport');
-
+var auth = require(__dirname + '/../../../../config/auth.json');
 
 
 var API = (function() {
@@ -16,7 +16,7 @@ var API = (function() {
     });
 
     var google = passport.authenticate('google', {
-        scope: config.get('auth.google.scope')
+        scope: auth.google.scope
     });
 
     var googleCallback = passport.authenticate('google', {
@@ -25,7 +25,7 @@ var API = (function() {
     });
 
     var facebook = passport.authenticate('facebook', {
-        scope: config.get('auth.facebook.scope')
+        scope: auth.facebook.scope
     });
 
     var facebookCallback = passport.authenticate('facebook', {
