@@ -1,3 +1,5 @@
+'use strict';
+
 let auth = {};
 if (process.env.AUTH_ENABLED === 'true') {
     if (process.env.GOOGLE_CLIENTID || process.env.FB_CLIENTID || process.env.TW_CONSUMERKEY) {
