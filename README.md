@@ -1,5 +1,9 @@
 # Global Forest Watch API Gateway
 
+Master: [![Build Status](https://travis-ci.org/Vizzuality/api-gateway.svg?branch=master)](https://travis-ci.org/Vizzuality/api-gateway) Develop: [![Build Status](https://travis-ci.org/Vizzuality/api-gateway.svg?branch=develop)](https://travis-ci.org/Vizzuality/api-gateway)
+
+
+
 This repository is the entry point for the Global Forest Watch API. The
 API consists of many microservices, which are managed and routed to by
 this gateway. This application is also responsible for transparently
