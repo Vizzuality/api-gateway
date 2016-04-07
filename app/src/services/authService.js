@@ -1,11 +1,32 @@
 'use strict';
 var passport = require('koa-passport');
 var config = require('config');
-var auth = require(__dirname + '/../../../config/auth.json');
 var co = require('co');
 var logger = require('logger');
 var UserService = require('services/userService');
 module.exports = function() {
+
+    var auth = {};
+    if (process.env.AUTH_ENV) {
+        auth = {
+            google: {
+                clientID: process.env.GOOGLE_CLIENTID,
+                clientSecret: process.env.GOOGLE_CLIENTSECRET,
+                scope: process.env.GOOGLE_SCOPE
+            },
+            facebook: {
+                clientID: process.env.FB_CLIENTID,
+                clientSecret: process.env.FB_CLIENTSECRET,
+                scope: process.env.FB_SCOPE
+            },
+            twitter: {
+                consumerKey: process.env.TW_CONSUMERKEY,
+                consumerSecret: process.env.TW_CONSUMERSECRET
+            }
+        };
+    } else {
+        auth = require(__dirname + '/../../../config/auth.json');
+    }
 
     var registerUser = function(accessToken, refreshToken, profile, done) {
         co(function*() {
@@ -22,14 +43,14 @@ module.exports = function() {
     });
 
     passport.deserializeUser(function(user, done) {
-        co(function*() {            
+        co(function*() {
             // var user = yield UserService.getUserById(id);
             done(null, user);
         });
 
     });
 
- var FacebookStrategy = require('passport-facebook').Strategy;
+    var FacebookStrategy = require('passport-facebook').Strategy;
     passport.use(new FacebookStrategy({
             clientID: auth.facebook.clientID,
             clientSecret: auth.facebook.clientSecret,
