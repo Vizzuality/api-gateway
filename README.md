@@ -118,7 +118,14 @@ Authentication:
 * `BASIC_AUTH_USERNAME`: username
 * `BASIC_AUTH_PASSWORD`: password
 
-To config oauth providers (twitter, facebook and google) is necesary create a file 'auth.json' in the config folder, with the next structure:
+
+To activate the auth login in api-gateway, you set the AUTH_ENABLED environment variable to true:
+````
+AUTH_ENABLED = true
+````
+
+To config oauth providers (twitter, facebook and google), you can create a file 'auth.json' in the config folder or declare environment variables.
+The auth.json file has the next structure:
 ````
 {
     "google": {
@@ -138,6 +145,21 @@ To config oauth providers (twitter, facebook and google) is necesary create a fi
 
 }
 ```
+
+In environment variables:
+````
+FB_CLIENTID = <Facebook client id>
+FB_CLIENTSECRET = <Facebook Client secret>
+FB_SCOPE = <Facebook scope. ex: email>
+GOOGLE_CLIENTID = <Google client id>
+GOOGLE_CLIENTSECRET = <Google client secret>
+GOOGLE_SCOPE = <Google scope. Ex: https://www.googleapis.com/auth/plus.me>
+TW_CONSUMERKEY = <Twitter consumer key>
+TW_CONSUMERSECRET = <Twitter consumer secret>
+
+```
+
+
 
 ## Documentation
 
