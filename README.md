@@ -66,7 +66,7 @@ git clone https://github.com/Vizzuality/api-gateway.git
 cd api-gateway
 ```
 
-Once this is done, you can either run the application natively, or inside a docker container. 
+Once this is done, you can either run the application natively, or inside a docker container.
 If you decide to run it natively, you will need to first install the required npm libraries, and the start the application:
 
 ```
@@ -114,6 +114,31 @@ Authentication:
 * `BASIC_AUTH_USERNAME`: username
 * `BASIC_AUTH_PASSWORD`: password
 
+To config oauth providers (twitter, facebook and google) is necesary create a file 'auth.json' in the config folder, with the next structure:
+````
+{
+    "google": {
+        "clientID": "<clientIdGoogle>",
+        "clientSecret": "<clientSecretGoogle>",
+        "scope": "https://www.googleapis.com/auth/plus.me"
+    },
+    "facebook": {
+        "clientID": "<clientIdFacebook>",
+        "clientSecret": "<clientSecretFacebook>",
+        "scope": "email"
+    },
+    "twitter": {
+        "consumerKey": "<consumerKeyTwitter>",
+        "consumerSecret": "<consumerSecretTwitter>"
+    }
+
+}
+```
+
 ## Documentation
 
 The services are documented using [Swagger](http://swagger.io/) specifications.
+
+
+# TODO:
+* [ ]  Add support to several endpoint in each service url

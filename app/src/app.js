@@ -11,6 +11,9 @@ var mount = require('koa-mount');
 var koa = require('koa');
 var cors = require('kcors');
 var path = require('path');
+var passport = require('koa-passport');
+var session = require('koa-generic-session');
+var MongoStore = require('koa-generic-session-mongo');
 var koaBody = require('koa-body')({
     multipart: true,
     jsonLimit: '50mb',
@@ -38,6 +41,16 @@ var onDbReady = function(err) {
     if (process.env.NODE_ENV === 'dev') {
         app.use(require('koa-logger')());
     }
+    //config sessions in mongo
+    app.keys = [config.get('server.sessionKey')];
+    app.use(session({
+        store: new MongoStore({
+            url: mongoUri
+        }),
+        cookie: {
+            domain: config.get('server.cookie.domain')
+        }
+    }));
 
     if (process.env.BASIC_AUTH && process.env.BASIC_AUTH === 'on') {
         app.use(function*(next) {
@@ -74,16 +87,20 @@ var onDbReady = function(err) {
 
     });
 
+    // passport configuration
+    require('services/authService')();
+    app.use(passport.initialize());
+    app.use(passport.session());
+
     //load endpoints and load validate only for /gateway
     app.use(koaBody);
     app.use(mount('/gateway', require('koa-validate')()));
     app.use(mount('/gateway', require('routes/gateway/serviceRouter').middleware()));
-
     app.use(mount('/doc', require('routes/docRouter').middleware()));
-
+    app.use(mount('/auth', require('routes/auth/authRouter').middleware()));
     app.use(require('routes/dispatcherRouter').middleware());
 
-
+    // create server
     var server = require('http').Server(app.callback());
 
     var port = process.env.PORT || config.get('server.port');

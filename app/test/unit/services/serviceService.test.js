@@ -35,6 +35,20 @@ describe('Service service', function () {
             path: '/api/users/:name'
         }]
     };
+    let serviceWithAuthenticated = {
+        id: 'test',
+        name: 'Test service authenticated',
+        url: '/usuarios/:name',
+        authenticated: true,
+        urlRegex: /^\/usuarios\/([^\/]+?)(?:\/(?=$))?$/i,
+        keys: ['name'],
+        method: 'POST',
+        endpoints: [{
+            method: 'POST',
+            baseUrl: 'http://localhost:3000',
+            path: '/api/users/:name'
+        }]
+    };
 
     let requestBody = {
         id: 'test',
@@ -56,6 +70,21 @@ describe('Service service', function () {
         urls: [{
             url: '/usuarios/:name',
             method: 'POST',
+            endpoints: [{
+                method: 'POST',
+                baseUrl: 'http://localhost:3000',
+                path: '/api/users/:name'
+            }]
+        }]
+    };
+
+    let requestAuthenticated = {
+        id: 'test',
+        name: 'Test service',
+        urls: [{
+            url: '/usuarios/:name',
+            method: 'POST',
+            authenticated: true,
             endpoints: [{
                 method: 'POST',
                 baseUrl: 'http://localhost:3000',
@@ -139,7 +168,9 @@ describe('Service service', function () {
         service.should.have.property('urlRegex');
         service.should.have.property('keys');
         service.should.have.property('endpoints');
+        service.should.have.property('authenticated');
         service.urlRegex.toString().should.be.equal(serviceResult.urlRegex.toString());
+        service.authenticated.should.be.equal(false);
         service.keys.should.be.a.Array();
         service.keys.should.length(0);
     });
@@ -153,10 +184,30 @@ describe('Service service', function () {
         service.should.have.property('urlRegex');
         service.should.have.property('keys');
         service.should.have.property('endpoints');
+        service.should.have.property('authenticated');
         service.urlRegex.toString().should.be.equal(serviceWithParamsResult.urlRegex.toString());
+        service.authenticated.should.be.equal(false);
         service.keys.should.be.a.Array();
         service.keys.should.length(1);
         service.keys[0].should.be.equal(serviceWithParamsResult.keys[0]);
+    });
+
+    it('Test save correct with authenticated', function* () {
+
+        let results = yield ServiceService.registerMicroservices(requestAuthenticated);
+        results.should.be.a.Array();
+        results.should.length(1);
+        let service = results[0];
+        service.should.have.property('urlRegex');
+        service.should.have.property('keys');
+        service.should.have.property('endpoints');
+        service.should.have.property('authenticated');
+        service.urlRegex.toString().should.be.equal(serviceWithAuthenticated.urlRegex.toString());
+        service.authenticated.should.be.equal(serviceWithAuthenticated.authenticated);
+        service.keys.should.be.a.Array();
+        service.keys.should.length(1);
+        service.keys[0].should.be.equal(serviceWithAuthenticated.keys[0]);
+
     });
 
     afterEach(function *(){

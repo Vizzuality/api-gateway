@@ -7,6 +7,7 @@ var pathToRegexp = require('path-to-regexp');
 var Service = require('models/service');
 var Filter = require('models/filter');
 var ServiceNotFound = require('errors/serviceNotFound');
+var NotAuthorized = require('errors/notAuthorized');
 var rest = require('restler');
 var restCo = require('lib/restCo');
 
@@ -65,7 +66,7 @@ class DispatcherService {
             throw new ServiceNotFound('Not found services to url:' + url);
 
         } catch (e) {
-            if ((e.response && e.response.statusCode === 404) || e instanceof ServiceNotFound) {
+            if (e.status === 404) {
                 throw new ServiceNotFound('Not found services to url:' + url);
             } else {
                 logger.error('Error to request', e);
@@ -74,7 +75,7 @@ class DispatcherService {
         }
     }
 
-    static * getRequests(sourceUrl, sourceMethod, body, headers, queryParams, files) {
+    static * getRequests(sourceUrl, sourceMethod, body, headers, queryParams, files, userAuth) {
         logger.debug('Obtaining config request to url %s and queryParams %s', sourceUrl, queryParams);
         var parsedUrl = url.parse(sourceUrl);
         logger.debug('Checking if exist in filters the url %s', sourceUrl);
@@ -111,6 +112,12 @@ class DispatcherService {
         var service = yield Service.findOne(findFilters);
         logger.debug('Service obtained: ', service);
         let configRequest = null;
+        if(service){
+            logger.info('Checking if the request is authenticated');
+            if(service.authenticated && !userAuth){
+                throw new NotAuthorized(sourceUrl + ': login required');
+            }
+        }
         if (service && service.endpoints) {
             for (let i = 0, length = service.endpoints.length; i < length; i++) {
                 let endpoint = service.endpoints[i];
@@ -147,6 +154,11 @@ class DispatcherService {
                         configRequest.data[endpoint.data[k]] = dataFilters[endpoint.data[k]];
                     }
                     logger.debug('Final request', configRequest);
+                }
+                //if is authenticated add user in the body
+                if(service.authenticated && (endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT') ){
+                    logger.debug('Adding user in the body because url is authenticated');
+                    configRequest.data.loggedUser = userAuth;
                 }
                 requests.push(configRequest);
             }

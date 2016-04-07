@@ -11,7 +11,7 @@ var wrapperOut = function(request, callback){
         callback(null, {body: data, response: response});
     });
     request.on('fail', function(data, response){
-        callback({body: data, response: response});
+        callback(data);
     });
     request.on('error', function(err, response){
         callback(err);

@@ -4,5 +4,11 @@
         "level": "debug",
         "toFile": false,
         "dirLogFile": null
+    },
+    "server": {
+        "publicUrl": "http://api-gateway-staging.herokuapp.com",
+        "cookie":{
+            "domain": "api-gateway-staging.herokuapp.com"
+        }
     }
 }

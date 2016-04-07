@@ -10,6 +10,7 @@ var Service = new Schema({
     urlRegex: {type: RegExp, required: true},
     keys: [{type: String, trim: true}],
     method: {type: String, required: true, trim: true},
+    authenticated:{type: Boolean, required: true, default: false},
     endpoints: [new mongoose.Schema({
         method: {type: String, required: true, default: 'GET', trim:true},
         baseUrl: {type: String, required: true, trim: true},
