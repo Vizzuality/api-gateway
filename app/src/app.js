@@ -43,6 +43,7 @@ var onDbReady = function(err) {
     }
     //config sessions in mongo
     if(process.env.AUTH_ENABLED === 'true'){
+        logger.info('OAUTH Enable');
         app.keys = [config.get('server.sessionKey')];
         app.use(session({
             store: new MongoStore({
