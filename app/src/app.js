@@ -42,7 +42,7 @@ var onDbReady = function(err) {
         app.use(require('koa-logger')());
     }
     //config sessions in mongo
-    if(process.env.AUTH_ENABLED){
+    if(process.env.AUTH_ENABLED === 'true'){
         app.keys = [config.get('server.sessionKey')];
         app.use(session({
             store: new MongoStore({
@@ -90,7 +90,7 @@ var onDbReady = function(err) {
     });
 
     // passport configuration
-    if(process.env.AUTH_ENABLED){
+    if(process.env.AUTH_ENABLED === 'true'){
         require('services/authService')();
         app.use(passport.initialize());
         app.use(passport.session());
@@ -102,7 +102,7 @@ var onDbReady = function(err) {
     app.use(mount('/gateway', require('routes/gateway/serviceRouter').middleware()));
     app.use(mount('/doc', require('routes/docRouter').middleware()));
 
-    if(process.env.AUTH_ENABLED){
+    if(process.env.AUTH_ENABLED === 'true'){
         app.use(mount('/auth', require('routes/auth/authRouter').middleware()));
     }
 

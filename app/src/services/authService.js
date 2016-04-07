@@ -7,7 +7,7 @@ var UserService = require('services/userService');
 module.exports = function() {
 
     var auth = {};
-    if (process.env.AUTH_ENABLED) {
+    if (process.env.AUTH_ENABLED === 'true') {
         auth = {
             google: {
                 clientID: process.env.GOOGLE_CLIENTID,
