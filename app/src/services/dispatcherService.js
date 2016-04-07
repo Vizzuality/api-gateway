@@ -115,7 +115,7 @@ class DispatcherService {
         if(service){
             logger.info('Checking if the request is authenticated');
             if(service.authenticated && !userAuth){
-                throw new NotAuthorized(sourceUrl + ': login required'); 
+                throw new NotAuthorized(sourceUrl + ': login required');
             }
         }
         if (service && service.endpoints) {
@@ -154,6 +154,11 @@ class DispatcherService {
                         configRequest.data[endpoint.data[k]] = dataFilters[endpoint.data[k]];
                     }
                     logger.debug('Final request', configRequest);
+                }
+                //if is authenticated add user in the body
+                if(service.authenticated && (endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT') ){
+                    logger.debug('Adding user in the body because url is authenticated');
+                    configRequest.data.loggedUser = userAuth;
                 }
                 requests.push(configRequest);
             }

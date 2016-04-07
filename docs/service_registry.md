@@ -17,7 +17,7 @@ To register service:
     "urls": [{
         "url": "/usuarios",
         "method": "GET",
-        "authenticated": true,  // This attribute specifies whether the user has to be logged in to call the endpoint. If it is true and the endpoint have PUT, PATCH or POST method, the user is added in the request to microservice.
+        "authenticated": true,  // This attribute specifies whether the user has to be logged in to call the endpoint. If it is true and the endpoint have PUT, PATCH or POST method, the user is added in the request body (loggedUser param) to microservice.
         "dataProvider": "dataset", // this attribute contain the name of provider which the api-gateway uses to filter the endpoint with the filter defined in 'filters'. The url to obtain the provider object is configured in config files. Only possible 'dataset'
         "paramProvider": "dataset", // name of the param of the url that the api-gateway uses to obtain the provider object.
         "filters":{ // object that contain the distinct filters that the api-gateway uses to filter the distinct endpoints. The key must be a key of the provider object.
