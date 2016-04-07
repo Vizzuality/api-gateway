@@ -42,15 +42,18 @@ var onDbReady = function(err) {
         app.use(require('koa-logger')());
     }
     //config sessions in mongo
-    app.keys = [config.get('server.sessionKey')];
-    app.use(session({
-        store: new MongoStore({
-            url: mongoUri
-        }),
-        cookie: {
-            domain: config.get('server.cookie.domain')
-        }
-    }));
+    if(process.env.AUTH_ENABLED === 'true'){
+        logger.info('OAUTH Enable');
+        app.keys = [config.get('server.sessionKey')];
+        app.use(session({
+            store: new MongoStore({
+                url: mongoUri
+            }),
+            cookie: {
+                domain: config.get('server.cookie.domain')
+            }
+        }));
+    }
 
     if (process.env.BASIC_AUTH && process.env.BASIC_AUTH === 'on') {
         app.use(function*(next) {
@@ -88,16 +91,22 @@ var onDbReady = function(err) {
     });
 
     // passport configuration
-    require('services/authService')();
-    app.use(passport.initialize());
-    app.use(passport.session());
+    if(process.env.AUTH_ENABLED === 'true'){
+        require('services/authService')();
+        app.use(passport.initialize());
+        app.use(passport.session());
+    }
 
     //load endpoints and load validate only for /gateway
     app.use(koaBody);
     app.use(mount('/gateway', require('koa-validate')()));
     app.use(mount('/gateway', require('routes/gateway/serviceRouter').middleware()));
     app.use(mount('/doc', require('routes/docRouter').middleware()));
-    app.use(mount('/auth', require('routes/auth/authRouter').middleware()));
+
+    if(process.env.AUTH_ENABLED === 'true'){
+        app.use(mount('/auth', require('routes/auth/authRouter').middleware()));
+    }
+
     app.use(require('routes/dispatcherRouter').middleware());
 
     // create server
