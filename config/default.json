@@ -8,7 +8,7 @@
         "url": "https://testingadrianapi-dot-gfw-apis.appspot.com"
     },
     "providers": {
-        "dataset": "/datasets/:dataset"
+        "dataset": "/dataset/:dataset"
     },
     "logger": {
         "name": "API-Gateway-DEV",
@@ -17,6 +17,11 @@
         "dirLogFile": null
     },
     "server": {
-        "port": 8000
+        "port": 8000,
+        "publicUrl": "http://api-gateway.globalforestwatch.dev:8000",
+        "cookie": {
+            "domain": "globalforestwatch.dev"
+        },
+        "sessionKey": "globalforestwatch-key"
     }
 }

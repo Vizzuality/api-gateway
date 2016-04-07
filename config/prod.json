@@ -4,5 +4,11 @@
         "level": "info",
         "toFile": true,
         "dirLogFile": "./logs/api_gateway.log"
+    },
+    "server": {
+        "publicUrl": "http://api-gateway.globalforestwatch.dev:8000",
+        "cookie":{
+            "domain": "globalforestwatch.dev"
+        }
     }
 }

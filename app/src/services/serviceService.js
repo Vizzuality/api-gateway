@@ -25,6 +25,7 @@ class ServiceService {
             name: data.name,
             url: data.url,
             urlRegex: regex,
+            authenticated: data.authenticated!== undefined? data.authenticated : false,
             keys: keys,
             method: data.method,
             endpoints: data.endpoints,
@@ -86,6 +87,7 @@ class ServiceService {
                     url: data.urls[i].url,
                     method: data.urls[i].method,
                     endpoints: data.urls[i].endpoints,
+                    authenticated: data.urls[i].authenticated,
                     filters: data.urls[i].filters,
                     dataProvider: data.urls[i].dataProvider,
                     paramProvider: data.urls[i].paramProvider
