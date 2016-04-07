@@ -4,7 +4,7 @@ var Router = require('koa-router');
 var config = require('config');
 var ApiRouter = new Router();
 var passport = require('koa-passport');
-var auth = require(__dirname + '/../../../../config/auth.json');
+var auth = require('auth');
 
 
 var API = (function() {
@@ -53,7 +53,7 @@ var API = (function() {
     var success = function *(){
         this.body = this.req.user;
     };
-    
+
     var logout = function *(){
         this.logout();
         this.body = 'ok';
