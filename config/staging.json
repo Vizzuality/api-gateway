@@ -6,9 +6,9 @@
         "dirLogFile": null
     },
     "server": {
-        "publicUrl": "http://api-gateway.globalforestwatch.dev:8000",
+        "publicUrl": "http://api-gateway-staging.herokuapp.com",
         "cookie":{
-            "domain": "globalforestwatch.dev"
+            "domain": "api-gateway-staging.herokuapp.com"
         }
     }
 }
