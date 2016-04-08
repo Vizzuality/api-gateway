@@ -28,32 +28,39 @@ module.exports = function() {
         });
 
     });
+    if(auth.facebook.clientID && auth.facebook.clientSecret){
+        logger.info('Facebook OAuth enable');
+        var FacebookStrategy = require('passport-facebook').Strategy;
+        passport.use(new FacebookStrategy({
+                clientID: auth.facebook.clientID,
+                clientSecret: auth.facebook.clientSecret,
+                callbackURL: config.get('server.publicUrl') + '/auth/facebook/callback'
+            },
+            registerUser
+        ));
+    }
 
-    var FacebookStrategy = require('passport-facebook').Strategy;
-    passport.use(new FacebookStrategy({
-            clientID: auth.facebook.clientID,
-            clientSecret: auth.facebook.clientSecret,
-            callbackURL: config.get('server.publicUrl') + '/auth/facebook/callback'
-        },
-        registerUser
-    ));
+    if(auth.twitter.consumerKey && auth.twitter.consumerSecret){
+        logger.info('Twitter OAuth enable');
+        var TwitterStrategy = require('passport-twitter').Strategy;
+        passport.use(new TwitterStrategy({
+                consumerKey: auth.twitter.consumerKey,
+                consumerSecret: auth.twitter.consumerSecret,
+                callbackURL: config.get('server.publicUrl') + '/auth/twitter/callback'
+            },
+            registerUser
+        ));
+    }
 
-    var TwitterStrategy = require('passport-twitter').Strategy;
-    passport.use(new TwitterStrategy({
-            consumerKey: auth.twitter.consumerKey,
-            consumerSecret: auth.twitter.consumerSecret,
-            callbackURL: config.get('server.publicUrl') + '/auth/twitter/callback'
-        },
-        registerUser
-    ));
-
-    var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-
-    passport.use(new GoogleStrategy({
-            clientID: auth.google.clientID,
-            clientSecret: auth.google.clientSecret,
-            callbackURL: config.get('server.publicUrl') + '/auth/google/callback'
-        },
-        registerUser
-    ));
+    if(auth.google.clientID && auth.google.clientSecret){
+        logger.info('Google OAuth enable');
+        var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+        passport.use(new GoogleStrategy({
+                clientID: auth.google.clientID,
+                clientSecret: auth.google.clientSecret,
+                callbackURL: config.get('server.publicUrl') + '/auth/google/callback'
+            },
+            registerUser
+        ));
+    }
 };
