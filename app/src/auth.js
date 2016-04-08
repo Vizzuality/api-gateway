@@ -20,7 +20,7 @@ if (process.env.AUTH_ENABLED === 'true') {
             }
         };
     } else {
-        auth =  require(__dirname + '/../../../config/auth.json');
+        auth =  require(__dirname + '/../../config/auth.json');
     }
 }
 module.exports = auth;

@@ -159,7 +159,7 @@ TW_CONSUMERSECRET = <Twitter consumer secret>
 
 ```
 
-
+If you don't want enable any oauth provider, you don't set the environment variables or properties in json of this provider
 
 ## Documentation
 
