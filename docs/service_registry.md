@@ -27,7 +27,7 @@ To register service:
             "method": "POST",
             "baseUrl": "#(service.uri)",
             "path": "/api/users",
-            "data": ["dataset"] // if this key exists, the api-gateway sends to microservice the object provider with this name. it sends in the body on the request. Only POST methods. Ex: body => {dataset: {object}}
+            "data": ["dataset"] // if this key exists, the api-gateway sends to microservice the object provider with this name. it sends in the body on the request. Only POST, PATCH, PUT methods. Options: "dataset", "loggedUser"; Ex: body => {dataset: {object}}
         }]
     }, {
         "url": "/usuarios",
