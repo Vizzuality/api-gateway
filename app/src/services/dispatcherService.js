@@ -145,20 +145,22 @@ class DispatcherService {
                     configRequest.data = Object.assign(configRequest.data || {}, formData);
                     configRequest.multipart = true;
                 }
-                if (endpoint.data && dataFilters) {
+                if (endpoint.data ) {
                     logger.debug('Obtaining data to endpoints');
                     for (let k = 0, lengthData = endpoint.data.length; k < lengthData; k++) {
-                        
+
                         if(endpoint.data[k] === 'loggedUser'){
                             configRequest.data[endpoint.data[k]] = userAuth;
                             if(!userAuth){
                                 logger.warn('User not logged. Add undefined in userLogged body parameter');
                             }
                         }else {
-                            if (!dataFilters[endpoint.data[k]]) {
+                            if (!dataFilters || !dataFilters[endpoint.data[k]]) {
                                 //TODO obtain data
                             }
-                            configRequest.data[endpoint.data[k]] = dataFilters[endpoint.data[k]];
+                            if(dataFilters){
+                                configRequest.data[endpoint.data[k]] = dataFilters[endpoint.data[k]];
+                            }
                         }
                     }
                     logger.debug('Final request', configRequest);
