@@ -60,6 +60,7 @@ If you are going to use containers, you will need:
 
 - [Docker](https://www.docker.com/)
 - [docker-compose](https://docs.docker.com/compose/)
+- Create folders (to save dbs): /var/docker/data/redisdb and /var/docker/data/mongodb 
 
 ## Executing
 

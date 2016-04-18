@@ -24,9 +24,9 @@ class RegisterRouter {
     }
     static * register() {
         logger.info('Registering service', this.request.body);
-        let services = yield ServiceService.registerMicroservices(this.request.body);
+        let microservice = yield ServiceService.registerMicroservices(this.request.body);
 
-        this.body = services;
+        this.body = {token: microservice.token};
 
     }
     static * unregister() {

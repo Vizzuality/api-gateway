@@ -97,6 +97,9 @@ var onDbReady = function(err) {
         app.use(passport.session());
     }
 
+    // add filter to microservice authentication
+    app.use(require('services/authMicroService')());
+
     //load endpoints and load validate only for /gateway
     app.use(koaBody);
     app.use(mount('/gateway', require('koa-validate')()));
@@ -119,7 +122,7 @@ var onDbReady = function(err) {
     co(function*() {
         logger.info('Add doc of the microservice');
         try {
-            yield ServiceService.addDocMicroservice({
+            yield ServiceService.addDataMicroservice({
                 id: 'api-gateway',
                 swagger: yaml.load(fs.readFileSync(__dirname + '/../public-swagger.yml').toString())
             });
