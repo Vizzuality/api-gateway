@@ -35,6 +35,10 @@ var onDbReady = function(err) {
         throw new Error(err);
     }
 
+    require('pmx').init({
+        http: true
+    });
+
     var app = koa();
     app.use(cors());
     //if dev environment then load koa-logger

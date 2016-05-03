@@ -3,3 +3,4 @@
 .vscode/
 npm-debug.log
 config/auth.json
+prod.env

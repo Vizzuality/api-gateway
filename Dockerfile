@@ -1,8 +1,8 @@
 FROM node:latest
 MAINTAINER raul.requero@vizzuality.com
 
-
-RUN npm install -g grunt-cli bunyan
+# RUN npm install -g grunt-cli bunyan pm2 && pm2 install pm2-mongodb && pm2 install pm2-redis
+RUN npm install -g grunt-cli bunyan pm2
 ENV NAME api-gateway
 ENV USER microservice
 
@@ -20,7 +20,7 @@ WORKDIR /opt/$NAME
 COPY ./app /opt/$NAME/app
 
 # Tell Docker we are going to use this ports
-EXPOSE 3100 35729
-USER $USER
+EXPOSE 8000 35729
+# USER $USER
 
 ENTRYPOINT ["./entrypoint.sh"]

@@ -79,10 +79,10 @@ class ServiceService {
             });
             //search by url. if not exist more services with same url (service removed), remove filters by same url
             for(let i = 0, length = exist.length; i < length; i++){
-                let services = yield Service.find({url: exist[0].url, method: exist[0].method});
+                let services = yield Service.find({url: exist[i].url, method: exist[i].method});
                 if(!services || services.length === 0){
-                    logger.debug('Removing filter to url: ', exist[0].url, ' and method: ', exist[0].method);
-                    yield Filter.remove({url: exist[0].url, method: exist[0].method});
+                    logger.debug('Removing filter to url: ', exist[i].url, ' and method: ', exist[i].method);
+                    yield Filter.remove({url: exist[i].url, method: exist[i].method});
                 }
             }
             logger.debug('Remove correct.');

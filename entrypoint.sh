@@ -16,7 +16,7 @@ case "$1" in
         ;;
     start)
         echo "Running Start"
-        exec node app/index
+        exec npm start
         ;;
     *)
         exec "$@"
