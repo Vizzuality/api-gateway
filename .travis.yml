@@ -7,7 +7,8 @@ services:
 script:
 - docker-compose -f docker-compose-test.yml build
 - docker-compose -f docker-compose-test.yml run test
-
+addons:
+  ssh_known_hosts: ec2-52-27-183-190.us-west-2.compute.amazonaws.com
 before_install:
   - bash _scripts/install.sh
 after_success:
