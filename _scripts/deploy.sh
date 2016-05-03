@@ -1,1 +1,1 @@
-ssh $DEPLOY_USER@$DEPLOY_HOST echo "hello"
+ssh $DEPLOY_USER@$DEPLOY_HOST echo $(pwd)

@@ -6,8 +6,7 @@
   "scripts": {
     "test-e2e": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js e2eTest",
     "test-unit": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js unitTest",
-    "start": "NODE_PATH=app/src node app/pm2.js",
-    "test": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js test"
+    "start": "NODE_PATH=app/src node app/pm2.js"
   },
   "keywords": [
     "api-gateway",
