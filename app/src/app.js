@@ -26,6 +26,10 @@ var koaBody = require('koa-body')({
     }
 });
 
+require('pmx').init({
+    http: true
+});
+
 var ErrorSerializer = require('serializers/errorSerializer');
 var ServiceService = require('services/serviceService');
 
@@ -35,9 +39,7 @@ var onDbReady = function(err) {
         throw new Error(err);
     }
 
-    require('pmx').init({
-        http: true
-    });
+
 
     var app = koa();
     app.use(cors());
