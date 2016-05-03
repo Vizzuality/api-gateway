@@ -10,9 +10,9 @@ script:
 addons:
   ssh_known_hosts: ec2-52-27-183-190.us-west-2.compute.amazonaws.com
 before_install:
-  - bash _scripts/install.sh
+- bash _scripts/install.sh
 after_success:
-  - bash _scripts/deploy.sh
+- bash _scripts/deploy.sh
 env:
   global:
   - secure: I2NNnWyVqhnj0srT2ICxYLbF/dQmJsCR13jc+dJZk7aEjHWg0YlFvGHbwcEOqstU6vq9OvXISOdsPnzlr3vwm/pNyryZnXTAGpxQeeNAskyiHJl0q59pnHj2ugZLOIytuqB7157+F/Wax+S1rpXBZdeZCpkn5SIsmg0htq8nTBJlWCm7LQaDS1taqED3oTtBzCU4ajBdMQMfRLwBKgpF97hjpIlBmnfxDhyMTI14JjA46bPRtQ6F0PX/jnhrp8FiPSFDlfNmhCY14IrzsjmPEH3svzEP7qmoABN7vmMxld/sn690RmGAas2cEkfIkUOv9D07A+oG+h9Z5Ta11ObR05cD3UeOFLVtIu8QBCQwG8ni9IyvVkIwkVW7Qfe275JjxyRrsqC9vxbjhE57ownZHNDYshFJQWqOTQ3VEd+HOuOTiT3OtLntf7POkc4BL8PDRGZ/x3CiQFVIGGrdgI5JHmn6EVPosz8L+/pocG6gpQ/7t4LySBhuTlx+pXGlmTg2FCx1nUgiSqI4Otx88lQJLYL00wBvX/6yacUDysnwgtPxL51VCG8peenzAchCtWBPi5vlxCAEWsBZmDfjjr6uLn6R8K/AMazbsHcyx4HLZiAqfPSkPccOtdqcPBYvYTXjhlvnt6yF9BOAG1IjqRRHKCQR+4e2yCe+SjT1VJC8MLE=
