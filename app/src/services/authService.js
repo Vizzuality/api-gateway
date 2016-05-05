@@ -5,6 +5,13 @@ var co = require('co');
 var logger = require('logger');
 var auth = require('auth');
 var UserService = require('services/userService');
+var JSONAPIDeserializer = require('jsonapi-serializer').Deserializer;
+
+var deserializer = function(obj){
+    return function(callback){
+        new JSONAPIDeserializer({keyForAttribute: 'camelCase'}).deserialize(obj, callback);
+    };
+};
 module.exports = function() {
 
     var registerUser = function(accessToken, refreshToken, profile, done) {
@@ -13,6 +20,7 @@ module.exports = function() {
                 provider: profile.provider,
                 providerId: profile.id
             });
+            user = yield deserializer(user);
             done(null, user);
         });
     };

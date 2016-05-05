@@ -6,8 +6,7 @@
   "scripts": {
     "test-e2e": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js e2eTest",
     "test-unit": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js unitTest",
-    "start": "NODE_PATH=app/src node app/index",
-    "test": "NODE_PATH=app/src NODE_ENV=test grunt --gruntfile app/Gruntfile.js test"
+    "start": "NODE_PATH=app/src node app/pm2.js"
   },
   "keywords": [
     "api-gateway",
@@ -48,7 +47,8 @@
     "slug": "0.9.1",
     "thunks": "4.1.3",
     "url": "0.11.0",
-    "yaml-js": "0.1.3"
+    "yaml-js": "0.1.3",
+    "newrelic": "1.27.1"
   },
   "devDependencies": {
     "co-mocha": "1.1.2",

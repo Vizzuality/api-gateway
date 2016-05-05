@@ -22,19 +22,7 @@ describe('Service service', function () {
             path: '/api/users'
         }]
     };
-    let serviceWithParamsResult = {
-        id: 'test',
-        name: 'Test service',
-        url: '/usuarios/:name',
-        urlRegex: /^\/usuarios\/([^\/]+?)(?:\/(?=$))?$/i,
-        keys: ['name'],
-        method: 'POST',
-        endpoints: [{
-            method: 'POST',
-            baseUrl: 'http://localhost:3000',
-            path: '/api/users/:name'
-        }]
-    };
+
     let serviceWithAuthenticated = {
         id: 'test',
         name: 'Test service authenticated',
@@ -162,51 +150,25 @@ describe('Service service', function () {
     it('Test save correct without params in url', function* () {
 
         let results = yield ServiceService.registerMicroservices(requestBody);
-        results.should.be.a.Array();
-        results.should.length(1);
-        let service = results[0];
-        service.should.have.property('urlRegex');
-        service.should.have.property('keys');
-        service.should.have.property('endpoints');
-        service.should.have.property('authenticated');
-        service.urlRegex.toString().should.be.equal(serviceResult.urlRegex.toString());
-        service.authenticated.should.be.equal(false);
-        service.keys.should.be.a.Array();
-        service.keys.should.length(0);
+        results.should.be.a.Object();
+
+        results.data.should.have.property('token');
     });
 
     it('Test save correct with params in url', function* () {
 
         let results = yield ServiceService.registerMicroservices(requestWithParamsServices);
-        results.should.be.a.Array();
-        results.should.length(1);
-        let service = results[0];
-        service.should.have.property('urlRegex');
-        service.should.have.property('keys');
-        service.should.have.property('endpoints');
-        service.should.have.property('authenticated');
-        service.urlRegex.toString().should.be.equal(serviceWithParamsResult.urlRegex.toString());
-        service.authenticated.should.be.equal(false);
-        service.keys.should.be.a.Array();
-        service.keys.should.length(1);
-        service.keys[0].should.be.equal(serviceWithParamsResult.keys[0]);
+        results.should.be.a.Object();
+
+        results.data.should.have.property('token');
     });
 
     it('Test save correct with authenticated', function* () {
 
         let results = yield ServiceService.registerMicroservices(requestAuthenticated);
-        results.should.be.a.Array();
-        results.should.length(1);
-        let service = results[0];
-        service.should.have.property('urlRegex');
-        service.should.have.property('keys');
-        service.should.have.property('endpoints');
-        service.should.have.property('authenticated');
-        service.urlRegex.toString().should.be.equal(serviceWithAuthenticated.urlRegex.toString());
-        service.authenticated.should.be.equal(serviceWithAuthenticated.authenticated);
-        service.keys.should.be.a.Array();
-        service.keys.should.length(1);
-        service.keys[0].should.be.equal(serviceWithAuthenticated.keys[0]);
+        results.should.be.a.Object();
+
+        results.data.should.have.property('token');
 
     });
 

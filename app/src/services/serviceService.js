@@ -5,6 +5,7 @@ var pathToRegexp = require('path-to-regexp');
 var Service = require('models/service');
 var Filter = require('models/filter');
 var Microservice = require('models/microservice');
+var crypto = require('crypto');
 
 class ServiceService {
 
@@ -52,16 +53,17 @@ class ServiceService {
         return service;
     }
 
-    static * addDocMicroservice(data){
+    static * addDataMicroservice(data){
         logger.info('Registering in microservice collection');
         logger.debug('Removing old microservice with same id %s', data.id);
         yield Microservice.remove({id: data.id});
 
-        yield new Microservice({
+        var microservice = yield new Microservice({
             id: data.id,
-            swagger: data.swagger
+            swagger: data.swagger,
+            token: crypto.randomBytes(20).toString('hex')
         }).save();
-
+        return microservice;
     }
 
     static * registerMicroservices(data){
@@ -75,6 +77,14 @@ class ServiceService {
             yield Service.remove({
                 id: data.id
             });
+            //search by url. if not exist more services with same url (service removed), remove filters by same url
+            for(let i = 0, length = exist.length; i < length; i++){
+                let services = yield Service.find({url: exist[i].url, method: exist[i].method});
+                if(!services || services.length === 0){
+                    logger.debug('Removing filter to url: ', exist[i].url, ' and method: ', exist[i].method);
+                    yield Filter.remove({url: exist[i].url, method: exist[i].method});
+                }
+            }
             logger.debug('Remove correct.');
         }
 
@@ -96,10 +106,10 @@ class ServiceService {
             }
         }
 
-        yield ServiceService.addDocMicroservice(data);
+        let microservice = yield ServiceService.addDataMicroservice(data);
 
         logger.info('Save correct');
-        return services;
+        return microservice;
     }
 }
 

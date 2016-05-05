@@ -2,13 +2,14 @@
     "logger": {
         "name": "API-Gateway",
         "level": "info",
-        "toFile": true,
+        "toFile": false,
         "dirLogFile": "./logs/api_gateway.log"
     },
     "server": {
-        "publicUrl": "http://api-gateway.globalforestwatch.dev:8000",
+        "port": 80,
+        "publicUrl": "http://ec2-52-27-183-190.us-west-2.compute.amazonaws.com",
         "cookie":{
-            "domain": "globalforestwatch.dev"
+            "domain": "amazonaws.com"
         }
     }
 }

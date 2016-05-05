@@ -40,7 +40,7 @@ class DispatcherRouter {
         logger.info('Dispatch url', this.request.url, ' and method ', this.request.method);
         let requests = null;
         try {
-            requests = yield DispatcherService.getRequests(this.request.path, this.request.method, this.request.body, this.request.headers, this.request.search, this.request.body.files, this.req.user);
+            requests = yield DispatcherService.getRequests(this.request.path, this.request.method, this.request.body, this.request.headers, this.request.search, this.request.body.files, (this.req.user || this.req.microservice));
         } catch (e) {
             logger.error(e);
             if (e instanceof ServiceNotFound) {
@@ -71,7 +71,7 @@ class DispatcherRouter {
             logger.error('Error to request', e);
             if(e.errors && e.errors.length > 0 && e.errors[0].status >= 400 && e.errors[0].status < 500){
                 this.status = e.errors[0].status;
-                this.body = e.errors[0];
+                this.body = e;
             } else {
                 this.throw(500, 'Unexpected error');
             }

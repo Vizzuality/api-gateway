@@ -18,12 +18,13 @@ class DocRouter {
 
             if(services){
                 for(let i = 0, length = services.length; i < length; i++){
-                    logger.debug(services[i].swagger.paths);
-                    if(services[i].swagger.paths){
-                        swagger.paths = Object.assign(swagger.paths, services[i].swagger.paths);
-                    }
-                    if(services[i].swagger.definitions){
-                        swagger.definitions = Object.assign(swagger.definitions, services[i].swagger.definitions);
+                    if(services[i].swagger){
+                        if(services[i].swagger.paths){
+                            swagger.paths = Object.assign(swagger.paths, services[i].swagger.paths);
+                        }
+                        if(services[i].swagger.definitions){
+                            swagger.definitions = Object.assign(swagger.definitions, services[i].swagger.definitions);
+                        }
                     }
                 }
             }
