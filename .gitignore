@@ -4,3 +4,4 @@
 npm-debug.log
 config/auth.json
 prod.env
+newrelic_agent.log
