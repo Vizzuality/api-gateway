@@ -1,4 +1,7 @@
 'use strict';
+
+require('newrelic');
+
 var config = require('config');
 var co = require('co');
 var yaml = require('yaml-js');
@@ -26,9 +29,6 @@ var koaBody = require('koa-body')({
     }
 });
 
-require('pmx').init({
-    http: true
-});
 
 var ErrorSerializer = require('serializers/errorSerializer');
 var ServiceService = require('services/serviceService');
