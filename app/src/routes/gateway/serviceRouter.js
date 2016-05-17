@@ -62,12 +62,18 @@ class RegisterRouter {
         this.body = remove;
     }
 
+    static  * updateService() {
+        logger.info('Updating services', this.request.body);
+        this.body = {};
+    }
+
 }
 
 router.get('/', RegisterRouter.getServices);
 router.post('/', ServiceValidator.register, RegisterRouter.register);
 router.delete('/all', RegisterRouter.unregisterAll);
 router.delete('/:id', RegisterRouter.unregister);
+router.post('/update', RegisterRouter.updateService);
 
 
 module.exports = router;
