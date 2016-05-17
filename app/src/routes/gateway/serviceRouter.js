@@ -7,6 +7,7 @@ var Service = require('models/service');
 var Filter = require('models/filter');
 var Microservice = require('models/microservice');
 var ServiceValidator = require('validators/serviceValidator');
+var restCo = require('lib/restCo');
 var router = new Router({
     prefix: '/service'
 });
@@ -22,13 +23,7 @@ class RegisterRouter {
             'endpoints._id': 0
         }).exec();
     }
-    static * register() {
-        logger.info('Registering service', this.request.body);
-        let microservice = yield ServiceService.registerMicroservices(this.request.body);
 
-        this.body = {token: microservice.token};
-
-    }
     static * unregister() {
         logger.info('Unregistering service ', this.params.id);
         var service = yield Service.findOne({
@@ -64,13 +59,31 @@ class RegisterRouter {
 
     static  * updateService() {
         logger.info('Updating services', this.request.body);
+        yield RegisterRouter.unregisterAll();
+        let microservices = this.request.body;
+        for (let i=0, length = microservices.length; i < length; i++){
+            try{
+                logger.debug('Doing request to ' + microservices[i].host + ':' + microservices[i].port);
+                let url = 'http://' + microservices[i].host + ':' + microservices[i].port;
+                let result = yield restCo({
+                    uri: url + '/info',
+                    method: 'GET'
+                });
+                if(result.response.statusCode === 200){
+                    logger.debug('Registering microservice');
+                    yield ServiceService.registerMicroservices(result.body, url);
+                }
+            }catch(e){
+                logger.error(e);
+            }
+        }
+
         this.body = {};
     }
 
 }
 
 router.get('/', RegisterRouter.getServices);
-router.post('/', ServiceValidator.register, RegisterRouter.register);
 router.delete('/all', RegisterRouter.unregisterAll);
 router.delete('/:id', RegisterRouter.unregister);
 router.post('/update', RegisterRouter.updateService);
