@@ -8,6 +8,7 @@ var Filter = require('models/filter');
 var Microservice = require('models/microservice');
 var ServiceValidator = require('validators/serviceValidator');
 var restCo = require('lib/restCo');
+var crypto = require('crypto');
 var router = new Router({
     prefix: '/service'
 });
@@ -65,13 +66,14 @@ class RegisterRouter {
             try{
                 logger.debug('Doing request to ' + microservices[i].host + ':' + microservices[i].port);
                 let url = 'http://' + microservices[i].host + ':' + microservices[i].port;
+                let token = crypto.randomBytes(20).toString('hex');
                 let result = yield restCo({
-                    uri: url + '/info',
+                    uri: url + '/info?token=' +token,
                     method: 'GET'
                 });
                 if(result.response.statusCode === 200){
                     logger.debug('Registering microservice');
-                    yield ServiceService.registerMicroservices(result.body, url);
+                    yield ServiceService.registerMicroservices(result.body, url, token);
                 }
             }catch(e){
                 logger.error(e);

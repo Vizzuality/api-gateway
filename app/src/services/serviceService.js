@@ -5,7 +5,6 @@ var pathToRegexp = require('path-to-regexp');
 var Service = require('models/service');
 var Filter = require('models/filter');
 var Microservice = require('models/microservice');
-var crypto = require('crypto');
 
 class ServiceService {
 
@@ -56,7 +55,7 @@ class ServiceService {
         return service;
     }
 
-    static * addDataMicroservice(data) {
+    static * addDataMicroservice(data, token) {
         logger.info('Registering in microservice collection');
         logger.debug('Removing old microservice with same id %s', data.id);
         yield Microservice.remove({
@@ -66,12 +65,12 @@ class ServiceService {
         var microservice = yield new Microservice({
             id: data.id,
             swagger: data.swagger,
-            token: crypto.randomBytes(20).toString('hex')
+            token: token || 'invalid'
         }).save();
         return microservice;
     }
 
-    static * registerMicroservices(data, url) {
+    static * registerMicroservices(data, url, token) {
         logger.info('Saving services');
         var exist = yield Service.find({
             id: data.id
@@ -123,7 +122,7 @@ class ServiceService {
             }
         }
 
-        let microservice = yield ServiceService.addDataMicroservice(data);
+        let microservice = yield ServiceService.addDataMicroservice(data, token);
 
         logger.info('Save correct');
         return microservice;
