@@ -5,7 +5,6 @@ var Microservice = require('models/microservice');
 module.exports = function() {
 
     return function*(next) {
-        logger.debug('HEADERS', this.request.headers);
         if (this.headers && this.request.headers.authentication) {
             logger.debug('Authenticated microservice with token: ', this.request.headers.authentication);
             let service = yield Microservice.findOne({

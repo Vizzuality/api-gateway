@@ -64,20 +64,22 @@ class RegisterRouter {
         yield RegisterRouter.unregisterAll();
         let microservices = this.request.body;
         for (let i=0, length = microservices.length; i < length; i++){
-            try{
-                logger.debug('Doing request to ' + microservices[i].host + ':' + microservices[i].port);
-                let url = 'http://' + microservices[i].host + ':' + microservices[i].port;
-                let token = crypto.randomBytes(20).toString('hex');
-                let result = yield restCo({
-                    uri: url + '/info?token=' +token + '&url='+config.get('server.internalUrl'),
-                    method: 'GET'
-                });
-                if(result.response.statusCode === 200){
-                    logger.debug('Registering microservice');
-                    yield ServiceService.registerMicroservices(result.body, url, token);
+            if(microservices[i].host){
+                try{
+                    logger.debug('Doing request to ' + microservices[i].host + ':' + microservices[i].port);
+                    let url = 'http://' + microservices[i].host + ':' + microservices[i].port;
+                    let token = crypto.randomBytes(20).toString('hex');
+                    let result = yield restCo({
+                        uri: url + '/info?token=' +token + '&url='+config.get('server.internalUrl'),
+                        method: 'GET'
+                    });
+                    if(result.response.statusCode === 200){
+                        logger.debug('Registering microservice');
+                        yield ServiceService.registerMicroservices(result.body, url, token);
+                    }
+                }catch(e){
+                    logger.error(e);
                 }
-            }catch(e){
-                logger.error(e);
             }
         }
 
