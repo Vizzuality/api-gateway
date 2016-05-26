@@ -139,6 +139,7 @@ class ServiceService {
     }
 
     static * updateMicroservices(microservices){
+
         yield ServiceService.unregisterAll();
         for (let i=0, length = microservices.length; i < length; i++){
             if(microservices[i].host){
