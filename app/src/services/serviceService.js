@@ -5,6 +5,8 @@ var pathToRegexp = require('path-to-regexp');
 var Service = require('models/service');
 var Filter = require('models/filter');
 var Microservice = require('models/microservice');
+var restCo = require('lib/restCo');
+var crypto = require('crypto');
 
 class ServiceService {
 
@@ -126,6 +128,30 @@ class ServiceService {
 
         logger.info('Save correct');
         return microservice;
+    }
+
+    updateMicroservices(microservices){
+        yield RegisterRouter.unregisterAll();
+        for (let i=0, length = microservices.length; i < length; i++){
+            if(microservices[i].host){
+                try{
+                    logger.debug('Doing request to ' + microservices[i].host + ':' + microservices[i].port);
+                    let url = 'http://' + microservices[i].host + ':' + microservices[i].port;
+                    let token = crypto.randomBytes(20).toString('hex');
+                    let result = yield restCo({
+                        uri: url + '/info?token=' +token + '&url='+config.get('server.internalUrl'),
+                        method: 'GET'
+                    });
+                    if(result.response.statusCode === 200){
+                        logger.debug('Registering microservice');
+                        yield ServiceService.registerMicroservices(result.body, url, token);
+                    }
+                }catch(e){
+                    logger.error(e);
+                }
+            }
+        }
+
     }
 }
 

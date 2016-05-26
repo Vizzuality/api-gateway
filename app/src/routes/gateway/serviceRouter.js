@@ -59,39 +59,13 @@ class RegisterRouter {
         this.body = remove;
     }
 
-    static  * updateService() {
-        logger.info('Updating services', this.request.body);
-        yield RegisterRouter.unregisterAll();
-        let microservices = this.request.body;
-        for (let i=0, length = microservices.length; i < length; i++){
-            if(microservices[i].host){
-                try{
-                    logger.debug('Doing request to ' + microservices[i].host + ':' + microservices[i].port);
-                    let url = 'http://' + microservices[i].host + ':' + microservices[i].port;
-                    let token = crypto.randomBytes(20).toString('hex');
-                    let result = yield restCo({
-                        uri: url + '/info?token=' +token + '&url='+config.get('server.internalUrl'),
-                        method: 'GET'
-                    });
-                    if(result.response.statusCode === 200){
-                        logger.debug('Registering microservice');
-                        yield ServiceService.registerMicroservices(result.body, url, token);
-                    }
-                }catch(e){
-                    logger.error(e);
-                }
-            }
-        }
 
-        this.body = {};
-    }
 
 }
 
 router.get('/', RegisterRouter.getServices);
 router.delete('/all', RegisterRouter.unregisterAll);
 router.delete('/:id', RegisterRouter.unregister);
-router.post('/update', RegisterRouter.updateService);
 
 
 module.exports = router;

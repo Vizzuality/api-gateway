@@ -1,6 +1,7 @@
 'use strict';
-
-require('newrelic');
+if (process.env.NODE_ENV === 'prod'){
+    require('newrelic');
+}
 
 var config = require('config');
 var co = require('co');
