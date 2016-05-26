@@ -3,7 +3,7 @@ var logger = require('logger');
 var config = require('config');
 var co = require('co');
 var ServiceService = require('services/serviceService');
-
+logger.info('Watching %s file', process.argv[2]);
 fs.watch(process.argv[2], function(){
     co(function *(){
         let content = fs.readFileSync(process.argv[2]);
