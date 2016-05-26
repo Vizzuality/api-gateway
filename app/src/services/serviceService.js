@@ -7,6 +7,7 @@ var Filter = require('models/filter');
 var Microservice = require('models/microservice');
 var restCo = require('lib/restCo');
 var crypto = require('crypto');
+var config = require('config');
 
 class ServiceService {
 
