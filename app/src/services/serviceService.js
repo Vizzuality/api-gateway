@@ -130,7 +130,7 @@ class ServiceService {
         return microservice;
     }
 
-    updateMicroservices(microservices){
+    static * updateMicroservices(microservices){
         yield RegisterRouter.unregisterAll();
         for (let i=0, length = microservices.length; i < length; i++){
             if(microservices[i].host){

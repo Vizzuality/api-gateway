@@ -7,7 +7,7 @@ var ServiceService = require('services/serviceService');
 fs.watch(process.argv[2], function(){
     co(function *(){
         let content = fs.readFileSync(process.argv[2]);
-        ServiceService.updateService(JSON.parse(content));
+        yield ServiceService.updateService(JSON.parse(content));
     }).then(function(){
         logger.info('Updated correct');
     }, function(err){
