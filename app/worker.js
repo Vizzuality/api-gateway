@@ -11,16 +11,20 @@ logger.info('Watching %s file', process.argv[2]);
 var onDbReady = function(err) {
 
     fs.watch(process.argv[2], function(){
-        co(function *(){
-            let content = fs.readFileSync(process.argv[2]);
-            yield ServiceService.updateMicroservices(JSON.parse(content));
-        }).then(function(){
-            logger.info('Updated correct');
-            process.exit(0); //the process restart by pm2
-        }, function(err){
-            logger.error('Error updating', err);
-            process.exit(0); //the process restart by pm2
-        });
+        logger.info('Change detected');
+        setTimeout(function(){
+            co(function *(){
+                let content = fs.readFileSync(process.argv[2]);
+                yield ServiceService.updateMicroservices(JSON.parse(content));
+            }).then(function(){
+                logger.info('Updated correct');
+                process.exit(0); //the process restart by pm2
+            }, function(err){
+                logger.error('Error updating', err);
+                process.exit(0); //the process restart by pm2
+            });
+        }, 5000);
+
     });
 };
 
