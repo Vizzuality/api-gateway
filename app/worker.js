@@ -16,8 +16,10 @@ var onDbReady = function(err) {
             yield ServiceService.updateMicroservices(JSON.parse(content));
         }).then(function(){
             logger.info('Updated correct');
+            process.exit(0); //the process restart by pm2
         }, function(err){
             logger.error('Error updating', err);
+            process.exit(0); //the process restart by pm2
         });
     });
 };
