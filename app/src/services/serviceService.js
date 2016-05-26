@@ -130,8 +130,16 @@ class ServiceService {
         return microservice;
     }
 
+    static * unregisterAll(){
+        logger.info('Unregistering all services');
+        var remove = yield Service.remove({});
+        yield Filter.remove({});
+        yield Microservice.remove({id: {$ne: 'api-gateway'}});
+        return remove;
+    }
+
     static * updateMicroservices(microservices){
-        yield RegisterRouter.unregisterAll();
+        yield ServiceService.unregisterAll();
         for (let i=0, length = microservices.length; i < length; i++){
             if(microservices[i].host){
                 try{

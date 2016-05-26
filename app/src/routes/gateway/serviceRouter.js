@@ -51,11 +51,8 @@ class RegisterRouter {
     }
 
     static * unregisterAll() {
-        logger.info('Unregistering all services');
-        var remove = yield Service.remove({});
-        yield Filter.remove({});
-        yield Microservice.remove({id: {$ne: 'api-gateway'}});
-        logger.debug(remove);
+        let remove = yield ServiceService.unregisterAll();
+
         this.body = remove;
     }
 
