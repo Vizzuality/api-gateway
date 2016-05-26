@@ -7,7 +7,7 @@ logger.info('Watching %s file', process.argv[2]);
 fs.watch(process.argv[2], function(){
     co(function *(){
         let content = fs.readFileSync(process.argv[2]);
-        yield ServiceService.updateService(JSON.parse(content));
+        yield ServiceService.updateMicroservices(JSON.parse(content));
     }).then(function(){
         logger.info('Updated correct');
     }, function(err){
