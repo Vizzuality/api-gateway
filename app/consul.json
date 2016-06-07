@@ -1,0 +1,12 @@
+[
+    {
+        "name": "gfw-geostore-api",
+        "host": "192.168.99.100",
+        "port": 3100
+    },
+    {
+        "name": "gfw-umd-api",
+        "host": "192.168.99.100",
+        "port": 3600
+    }
+]

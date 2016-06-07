@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:6.2
 MAINTAINER raul.requero@vizzuality.com
 
 # RUN npm install -g grunt-cli bunyan pm2 && pm2 install pm2-mongodb && pm2 install pm2-redis
