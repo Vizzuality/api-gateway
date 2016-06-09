@@ -11,7 +11,7 @@ var mongoUri = 'mongodb://' + config.get('mongodb.host') + ':' + config.get('mon
 logger.info('Watching %s file', process.argv[2]);
 
 var onDbReady = function(err) {
-    if(process.env.NODE_ENV === 'prod'){
+    if(process.env.NODE_ENV !== 'dev'){
         let inProcess = false;
         fs.watch(process.argv[2], function(){
             if(!inProcess){
@@ -19,7 +19,7 @@ var onDbReady = function(err) {
                 logger.info('Change detected');
                 setTimeout(function(){
                     co(function *(){
-                        let content = fs.readFileSync(process.argv[2]);
+                        let content = fs.readFileSync('/opt/api-gateway/app/consul.json');
                         yield ServiceService.updateMicroservices(JSON.parse(content));
                     }).then(function(){
                         logger.info('Updated correct');
