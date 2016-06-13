@@ -19,7 +19,7 @@ var onDbReady = function(err) {
                 logger.info('Change detected');
                 setTimeout(function(){
                     co(function *(){
-                        let content = fs.readFileSync('/opt/api-gateway/app/consul.json');
+                        let content = fs.readFileSync(process.argv[2]);
                         yield ServiceService.updateMicroservices(JSON.parse(content));
                     }).then(function(){
                         logger.info('Updated correct');
