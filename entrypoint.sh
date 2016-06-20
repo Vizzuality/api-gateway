@@ -4,7 +4,7 @@ set -e
 case "$1" in
     develop)
         echo "Running Development Server"
-        node app/worker.js /opt/api-gateway/app/consul.json
+        node app/worker.js /opt/api-gateway/app/consul.json &
         exec grunt --gruntfile app/Gruntfile.js | bunyan
         ;;
     startDev)

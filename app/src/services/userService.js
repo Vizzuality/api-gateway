@@ -12,7 +12,7 @@ class UserService {
     static * createOrGetUser(data){
         try{
             logger.info('Create or getter user from management user microservice');
-            let requests = yield DispatcherService.getRequests(CREATE_OR_GET, 'POST', data);
+            let requests = yield DispatcherService.getRequests(CREATE_OR_GET, 'POST', data, null, null, null, {id: 'api-gateway'});
             logger.debug('Requests obtained', requests);
             if(requests){
                 logger.debug('Send request');
@@ -30,9 +30,9 @@ class UserService {
             logger.error(e);
             throw e;
         }
-        
+
     }
-    
+
     static * getUserById(id){
         try{
             logger.info('Get user by id %s from management user microservice.', id);
@@ -55,7 +55,7 @@ class UserService {
             throw e;
         }
     }
-   
+
 }
 
 module.exports = UserService;

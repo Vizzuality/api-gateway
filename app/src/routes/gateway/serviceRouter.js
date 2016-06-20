@@ -2,7 +2,7 @@
 var pathToRegexp = require('path-to-regexp');
 var Router = require('koa-router');
 var logger = require('logger');
-var ServiceService = require('services/serviceService');
+var RegisterService = require('services/registerService');
 var Service = require('models/service');
 var Filter = require('models/filter');
 var Microservice = require('models/microservice');
@@ -51,11 +51,17 @@ class RegisterRouter {
     }
 
     static * unregisterAll() {
-        let remove = yield ServiceService.unregisterAll();
+        let remove = yield RegisterService.unregisterAll();
 
         this.body = remove;
     }
 
+    static * refresh() {
+        logger.info('Refreshing registered services');
+        let content = require('fs').readFileSync(require('path').join(__dirname,'../../../consul.json'));
+        yield RegisterService.updateMicroservices(JSON.parse(content));
+        this.body = 'OK';
+    }
 
 
 }
@@ -63,6 +69,11 @@ class RegisterRouter {
 router.get('/', RegisterRouter.getServices);
 router.delete('/all', RegisterRouter.unregisterAll);
 router.delete('/:id', RegisterRouter.unregister);
+
+if(process.env.NODE_ENV === 'dev'){
+    logger.info('Registering refresh endpoint');
+    router.get('/refresh', RegisterRouter.refresh);
+}
 
 
 module.exports = router;

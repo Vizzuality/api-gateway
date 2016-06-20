@@ -32,7 +32,7 @@ var koaBody = require('koa-body')({
 
 
 var ErrorSerializer = require('serializers/errorSerializer');
-var ServiceService = require('services/serviceService');
+var RegisterService = require('services/registerService');
 
 var onDbReady = function(err) {
     if (err) {
@@ -76,6 +76,7 @@ var onDbReady = function(err) {
                 }
             }
         });
+
         app.use(mount('/gateway', auth({
             name: process.env.BASIC_AUTH_USERNAME,
             pass: process.env.BASIC_AUTH_PASSWORD
@@ -85,6 +86,7 @@ var onDbReady = function(err) {
     //catch errors and send in jsonapi standard. Always return vnd.api+json
     app.use(function*(next) {
         try {
+            this.res.setHeader('Access-Control-Allow-Credentials', true);
             yield next;
         } catch (err) {
             this.status = err.status || 500;
@@ -129,7 +131,7 @@ var onDbReady = function(err) {
     co(function*() {
         logger.info('Add doc of the microservice');
         try {
-            yield ServiceService.addDataMicroservice({
+            yield RegisterService.addDataMicroservice({
                 id: 'api-gateway',
                 swagger: yaml.load(fs.readFileSync(__dirname + '/../public-swagger.yml').toString())
             });

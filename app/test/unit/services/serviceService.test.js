@@ -89,7 +89,7 @@ describe('Service service', function () {
             useCleanCache: true
         });
     });
-    let ServiceService = null;
+    let RegisterService = null;
     beforeEach(function* (){
         var serviceMock = function (data) {
             this.data = data;
@@ -144,12 +144,12 @@ describe('Service service', function () {
         mockery.registerMock('models/service', serviceMock);
         mockery.registerMock('models/filter', filterMock);
         mockery.registerMock('models/microservice', microserviceMock);
-        ServiceService = require('services/serviceService');
+        RegisterService = require('services/registerService');
     });
 
     it('Test save correct without params in url', function* () {
 
-        let results = yield ServiceService.registerMicroservices(requestBody);
+        let results = yield RegisterService.registerMicroservices(requestBody);
         results.should.be.a.Object();
 
         results.data.should.have.property('token');
@@ -157,7 +157,7 @@ describe('Service service', function () {
 
     it('Test save correct with params in url', function* () {
 
-        let results = yield ServiceService.registerMicroservices(requestWithParamsServices);
+        let results = yield RegisterService.registerMicroservices(requestWithParamsServices);
         results.should.be.a.Object();
 
         results.data.should.have.property('token');
@@ -165,7 +165,7 @@ describe('Service service', function () {
 
     it('Test save correct with authenticated', function* () {
 
-        let results = yield ServiceService.registerMicroservices(requestAuthenticated);
+        let results = yield RegisterService.registerMicroservices(requestAuthenticated);
         results.should.be.a.Object();
 
         results.data.should.have.property('token');
@@ -174,7 +174,7 @@ describe('Service service', function () {
 
     afterEach(function *(){
         mockery.deregisterAll();
-        ServiceService = null;
+        RegisterService = null;
     });
 
     after(function* () {

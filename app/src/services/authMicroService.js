@@ -14,6 +14,7 @@ module.exports = function() {
                 this.req.microservice = service;
             }
         }
+
         yield next;
     };
 };

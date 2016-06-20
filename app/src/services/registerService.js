@@ -9,7 +9,7 @@ var restCo = require('lib/restCo');
 var crypto = require('crypto');
 var config = require('config');
 
-class ServiceService {
+class RegisterService {
 
     static * saveService(data) {
         logger.debug('Saving service ', data);
@@ -110,7 +110,7 @@ class ServiceService {
                         data.urls[i].endpoints[j].baseUrl = url;
                     }
                 }
-                services.push(yield ServiceService.saveService({
+                services.push(yield RegisterService.saveService({
                     id: data.id,
                     name: data.name,
                     url: data.urls[i].url,
@@ -125,7 +125,7 @@ class ServiceService {
             }
         }
 
-        let microservice = yield ServiceService.addDataMicroservice(data, token);
+        let microservice = yield RegisterService.addDataMicroservice(data, token);
 
         logger.info('Save correct');
         return microservice;
@@ -141,7 +141,7 @@ class ServiceService {
 
     static * updateMicroservices(microservices){
 
-        yield ServiceService.unregisterAll();
+        yield RegisterService.unregisterAll();
         for (let i=0, length = microservices.length; i < length; i++){
             if(microservices[i].host){
                 try{
@@ -154,7 +154,7 @@ class ServiceService {
                     });
                     if(result.response.statusCode === 200){
                         logger.debug('Registering microservice');
-                        yield ServiceService.registerMicroservices(result.body, url, token);
+                        yield RegisterService.registerMicroservices(result.body, url, token);
                     }
                 }catch(e){
                     logger.error(e);
@@ -165,4 +165,4 @@ class ServiceService {
     }
 }
 
-module.exports = ServiceService;
+module.exports = RegisterService;

@@ -5,6 +5,7 @@ var config = require('config');
 var ApiRouter = new Router();
 var passport = require('koa-passport');
 var auth = require('auth');
+var logger = require('logger');
 
 
 var API = (function() {
@@ -51,6 +52,12 @@ var API = (function() {
     };
 
     var success = function *(){
+        logger.debug('Success', this.session.redirectUrl);
+        if(this.session.redirectUrl){
+            logger.debug(this.session.redirectUrl);
+            this.redirect(this.session.redirectUrl);
+            return;
+        }
         this.body = this.req.user;
     };
 
@@ -73,15 +80,21 @@ var API = (function() {
     };
 }());
 
-ApiRouter.get('/twitter', API.twitter);
+var setRedirectUrl = function *(next){
+    logger.debug('REFERRER ', this.headers.referer);
+    this.session.redirectUrl = this.headers.referer;
+    yield next;
+};
+
+ApiRouter.get('/twitter', setRedirectUrl, API.twitter);
 
 ApiRouter.get('/twitter/callback', API.twitterCallback);
 
-ApiRouter.get('/facebook', API.facebook);
+ApiRouter.get('/facebook', setRedirectUrl, API.facebook);
 
 ApiRouter.get('/facebook/callback', API.facebookCallback);
 
-ApiRouter.get('/google', API.google);
+ApiRouter.get('/google', setRedirectUrl, API.google);
 
 ApiRouter.get('/google/callback', API.googleCallback);
 
