@@ -22,6 +22,8 @@ module.exports = function() {
             });
             user = yield deserializer(user);
             done(null, user);
+        }).then(function(){}, function(err){
+            logger.error(err);
         });
     };
 

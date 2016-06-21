@@ -165,11 +165,22 @@ class DispatcherService {
                     }
                     logger.debug('Final request', configRequest);
                 }
+
                 //if is authenticated add user in the body
-                if(service.authenticated && (endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT') ){
-                    logger.debug('Adding user in the body because url is authenticated');
-                    configRequest.data.loggedUser = userAuth;
+                var methodsWithBody = ['POST', 'PATCH', 'PUT'];
+                logger.info('user auth', userAuth);
+                if (userAuth !== undefined) {
+                  if (methodsWithBody.indexOf(endpoint.method) > -1) {
+                      logger.debug('Adding user in the body because url is authenticated');
+                      configRequest.data.loggedUser = userAuth;
+                  } else {
+                      logger.debug('Adding user in the query string because url is authenticated');
+                      configRequest.query = configRequest.query || {};
+                      configRequest.query.loggedUser = userAuth;
+                  }
                 }
+
+
                 requests.push(configRequest);
             }
             return requests;
