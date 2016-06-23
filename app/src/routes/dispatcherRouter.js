@@ -10,6 +10,8 @@ var NotAuthorized = require('errors/notAuthorized');
 var router = new Router({});
 var restCo = require('lib/restCo');
 var fs = require('fs');
+var config = require('config');
+var url = require('url');
 
 var unlink = function(file) {
     return function(callback) {
@@ -23,6 +25,22 @@ var ALLOWED_HEADERS = [
   'cache-control',
   'charset'
 ];
+
+var corsHeadersForRequest = function(request) {
+    if (request.headers.origin !== undefined) {
+        var origin = request.headers.origin,
+            domain = url.parse(origin).hostname;
+
+        if (config.get('allowed_domains').indexOf(domain) > -1) {
+            return {
+                'Access-Control-Allow-Origin': origin,
+                'Access-Control-Allow-Credentials': 'true'
+            };
+        }
+    }
+
+    return { 'Access-Control-Allow-Origin': '*' };
+};
 
 var getHeadersFromResponse = function(response) {
     var validHeaders = {};
@@ -63,6 +81,7 @@ class DispatcherRouter {
             });
             let result = yield requests;
 
+            this.set(corsHeadersForRequest(this.request));
             this.set(getHeadersFromResponse(result[0].response));
             this.status = result[0].response.statusCode;
             this.body = result[0].body;

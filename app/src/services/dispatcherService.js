@@ -83,6 +83,7 @@ class DispatcherService {
             $where: 'this.urlRegex && this.urlRegex.test(\'' + parsedUrl.pathname + '\')',
             method: sourceMethod
         });
+
         logger.debug('Filter Obtained', filter);
         let dataFilters = null;
         if (filter) {
@@ -109,6 +110,7 @@ class DispatcherService {
         if (dataFilters && dataFilters.filters) {
             findFilters.filters = dataFilters.filters;
         }
+
         var service = yield Service.findOne(findFilters);
         logger.debug('Service obtained: ', service);
         let configRequest = null;
@@ -118,6 +120,7 @@ class DispatcherService {
                 throw new NotAuthorized(sourceUrl + ': login required');
             }
         }
+
         if (service && service.endpoints) {
             for (let i = 0, length = service.endpoints.length; i < length; i++) {
                 let endpoint = service.endpoints[i];
@@ -128,14 +131,17 @@ class DispatcherService {
                     uri: endpoint.baseUrl + url,
                     method: endpoint.method
                 };
+
                 if (queryParams) {
                     configRequest.uri = configRequest.uri + queryParams;
                 }
+
                 logger.debug('Create request to %s', configRequest.uri);
                 if (endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT') {
                     logger.debug('Method is %s. Adding body', configRequest.method);
                     configRequest.data = body;
                 }
+
                 if (files) {
                     logger.debug('Adding files');
                     let formData = {};
@@ -145,6 +151,11 @@ class DispatcherService {
                     configRequest.data = Object.assign(configRequest.data || {}, formData);
                     configRequest.multipart = true;
                 }
+
+                if (headers) {
+                  config.headers = headers;
+                }
+
                 if (endpoint.data ) {
                     logger.debug('Obtaining data to endpoints');
                     for (let k = 0, lengthData = endpoint.data.length; k < lengthData; k++) {
@@ -154,7 +165,7 @@ class DispatcherService {
                             if(!userAuth){
                                 logger.warn('User not logged. Add undefined in userLogged body parameter');
                             }
-                        }else {
+                        } else {
                             if (!dataFilters || !dataFilters[endpoint.data[k]]) {
                                 //TODO obtain data
                             }
@@ -179,7 +190,6 @@ class DispatcherService {
                       configRequest.query.loggedUser = userAuth;
                   }
                 }
-
 
                 requests.push(configRequest);
             }
