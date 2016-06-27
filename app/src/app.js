@@ -104,11 +104,17 @@ var onDbReady = function(err) {
             yield next;
         } catch (err) {
             this.status = err.status || 500;
-            this.body = ErrorSerializer.serializeError(this.status, err.message);
+            this.response.type = 'application/vnd.api+json';
             if (process.env.NODE_ENV === 'prod' && this.status === 500) {
                 this.body = 'Unexpected error';
+                return;
             }
-            this.response.type = 'application/vnd.api+json';
+            let message = err.message.
+            if(err.exception){
+                message += '\n'+err.exception;
+            }
+            this.body = ErrorSerializer.serializeError(this.status, message );
+
         }
 
     });
