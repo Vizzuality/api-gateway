@@ -77,9 +77,12 @@ class DispatcherRouter {
                     this.throw(500, 'Unexpected error');
                     return;
                 }
-                let message = e.message;
+                let message = '';
+                if(e.message){
+                    message += e.message;
+                }
                 if (e.exception) {
-                    message += '\n' + e.exception;
+                    message += ' --- ' + e.exception;
                 }
                 this.throw(500, message);
                 return;
