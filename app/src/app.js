@@ -107,14 +107,8 @@ var onDbReady = function(err) {
             this.response.type = 'application/vnd.api+json';
             if (process.env.NODE_ENV === 'prod' && this.status === 500) {
                 this.body = 'Unexpected error';
-                return;
             }
-            let message = err.message;
-            if(err.exception){
-                message += '\n'+err.exception;
-            }
-            this.body = ErrorSerializer.serializeError(this.status, message );
-
+            this.body = ErrorSerializer.serializeError(this.status, err.message);            
         }
 
     });
