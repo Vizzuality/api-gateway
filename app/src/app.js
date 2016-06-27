@@ -46,7 +46,7 @@ var onDbReady = function(err) {
     app.use(cors({
       credentials: true,
       origin: function(request) {
-        if (request.headers.origin !== undefined) {
+        if (request.headers.origin) {
             var origin = request.headers.origin,
                 domain = url.parse(origin).hostname;
 
