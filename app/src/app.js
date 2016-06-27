@@ -43,7 +43,7 @@ var onDbReady = function(err) {
 
 
     var app = koa();
-    app.use(cors());
+    app.use(cors({credentials: true}));
     //if dev environment then load koa-logger
     if (process.env.NODE_ENV === 'dev') {
         app.use(require('koa-logger')());
