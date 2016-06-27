@@ -22,6 +22,7 @@ var unlink = function(file) {
 var ALLOWED_HEADERS = [
   'access-control-allow-origin',
   'access-control-allow-headers',
+  'access-control-allow-credentials',
   'cache-control',
   'charset'
 ];
