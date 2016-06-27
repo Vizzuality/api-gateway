@@ -10,8 +10,8 @@
         "port": 3600
     },
     {
-        "name": "gfw-user-api",
+        "name": "rw-adapter-csv",
         "host": "192.168.99.100",
-        "port": 3400
+        "port": 4000
     }
 ]
