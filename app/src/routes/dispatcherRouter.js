@@ -19,18 +19,18 @@ var unlink = function(file) {
 };
 
 var ALLOWED_HEADERS = [
-  'access-control-allow-origin',
-  'access-control-allow-headers',
-  'access-control-allow-credentials',
-  'cache-control',
-  'charset'
+    'access-control-allow-origin',
+    'access-control-allow-headers',
+    'access-control-allow-credentials',
+    'cache-control',
+    'charset'
 ];
 
 var getHeadersFromResponse = function(response) {
     var validHeaders = {};
     _.each(response.headers, function(value, key) {
         if (ALLOWED_HEADERS.indexOf(key.toLowerCase()) > -1) {
-          validHeaders[key] = value;
+            validHeaders[key] = value;
         }
     });
     return validHeaders;
@@ -49,12 +49,22 @@ class DispatcherRouter {
                 logger.debug('Service not found');
                 this.throw(404, 'Endpoint not found');
                 return;
-            } if (e instanceof NotAuthorized) {
+            }
+            if (e instanceof NotAuthorized) {
                 logger.debug('Not authorized');
                 this.throw(401, e.message);
                 return;
             } else {
-                this.throw(500, 'Unexpected error');
+                if (process.env.NODE_ENV === 'prod') {
+                    this.throw(500, 'Unexpected error');
+                    return;
+                }
+                let message = e.message;
+                if (e.exception) {
+                    message += '\n' + e.exception;
+                }
+                this.throw(500, message);
+
                 return;
             }
         }
@@ -71,7 +81,7 @@ class DispatcherRouter {
             this.response.type = result[0].response.headers['content-type'];
         } catch (e) {
             logger.error('Error to request', e);
-            if(e.errors && e.errors.length > 0 && e.errors[0].status >= 400 && e.errors[0].status < 500){
+            if (e.errors && e.errors.length > 0 && e.errors[0].status >= 400 && e.errors[0].status < 500) {
                 this.status = e.errors[0].status;
                 this.body = e;
             } else {
@@ -79,10 +89,10 @@ class DispatcherRouter {
             }
 
         } finally {
-            if(this.request.body.files){
+            if (this.request.body.files) {
                 logger.debug('Removing files');
                 let files = Object.keys(this.request.body.files);
-                for( let i=0, length= files.length; i < length; i++){
+                for (let i = 0, length = files.length; i < length; i++) {
                     logger.debug('Removing file  %s', this.request.body.files[files[i]].path);
                     yield unlink(this.request.body.files[files[i]].path);
                 }
