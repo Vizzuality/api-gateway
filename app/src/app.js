@@ -109,7 +109,7 @@ var onDbReady = function(err) {
                 this.body = 'Unexpected error';
                 return;
             }
-            let message = err.message.
+            let message = err.message;
             if(err.exception){
                 message += '\n'+err.exception;
             }
