@@ -11,7 +11,6 @@ var router = new Router({});
 var restCo = require('lib/restCo');
 var fs = require('fs');
 var config = require('config');
-var url = require('url');
 
 var unlink = function(file) {
     return function(callback) {

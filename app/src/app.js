@@ -29,7 +29,7 @@ var koaBody = require('koa-body')({
         }
     }
 });
-
+var url = require('url');
 
 var ErrorSerializer = require('serializers/errorSerializer');
 var RegisterService = require('services/registerService');
