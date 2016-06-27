@@ -43,7 +43,22 @@ var onDbReady = function(err) {
 
 
     var app = koa();
-    app.use(cors({credentials: true}));
+    app.use(cors({
+      credentials: true,
+      origin: function(request) {
+        if (request.headers.origin !== undefined) {
+            var origin = request.headers.origin,
+                domain = url.parse(origin).hostname;
+
+            if (config.get('allowed_domains').indexOf(domain) > -1) {
+                return origin;
+            }
+        }
+
+        return '*';
+      }
+    }));
+
     //if dev environment then load koa-logger
     if (process.env.NODE_ENV === 'dev') {
         app.use(require('koa-logger')());
