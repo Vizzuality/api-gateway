@@ -178,7 +178,7 @@ class DispatcherService {
                 }
 
                 //if is authenticated add user in the body
-                var methodsWithBody = ['POST', 'PATCH', 'PUT'];
+                var methodsWithBody = ['POST', 'PATCH', 'PUT', 'DELETE'];
                 logger.info('user auth', userAuth);
                 if (userAuth !== undefined) {
                   if (methodsWithBody.indexOf(endpoint.method) > -1) {
