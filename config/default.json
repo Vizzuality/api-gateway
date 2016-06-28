@@ -1,7 +1,7 @@
 {
     "allowed_domains": [
       "www.globalforestwatch.org", "globalforestwatch.org",
-      "staging.globalforestwatch.org", "localhost:5000"
+      "staging.globalforestwatch.org", "localhost"
     ],
     "mongodb": {
         "database": "api_gateway_db",

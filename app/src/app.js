@@ -50,8 +50,8 @@ var onDbReady = function(err) {
         if (request.headers.origin) {
             var origin = request.headers.origin,
                 domain = url.parse(origin).hostname;
-
             if (config.get('allowed_domains').indexOf(domain) > -1) {
+                logger.debug('Allowed Domain');
                 return origin;
             }
         }
@@ -102,15 +102,14 @@ var onDbReady = function(err) {
     //catch errors and send in jsonapi standard. Always return vnd.api+json
     app.use(function*(next) {
         try {
-            this.res.setHeader('Access-Control-Allow-Credentials', true);
             yield next;
         } catch (err) {
             this.status = err.status || 500;
-            this.body = ErrorSerializer.serializeError(this.status, err.message);
+            this.response.type = 'application/vnd.api+json';
             if (process.env.NODE_ENV === 'prod' && this.status === 500) {
                 this.body = 'Unexpected error';
             }
-            this.response.type = 'application/vnd.api+json';
+            this.body = ErrorSerializer.serializeError(this.status, err.message);            
         }
 
     });

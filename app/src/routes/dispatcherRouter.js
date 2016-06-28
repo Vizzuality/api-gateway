@@ -10,7 +10,6 @@ var NotAuthorized = require('errors/notAuthorized');
 var router = new Router({});
 var restCo = require('lib/restCo');
 var fs = require('fs');
-var config = require('config');
 
 var unlink = function(file) {
     return function(callback) {
@@ -21,7 +20,6 @@ var unlink = function(file) {
 var ALLOWED_HEADERS = [
   'access-control-allow-origin',
   'access-control-allow-headers',
-  'access-control-allow-credentials',
   'cache-control',
   'charset'
 ];
@@ -75,7 +73,20 @@ class DispatcherRouter {
                 this.status = e.errors[0].status;
                 this.body = e;
             } else {
-                this.throw(500, 'Unexpected error');
+                if (process.env.NODE_ENV === 'prod') {
+                    this.throw(500, 'Unexpected error');
+                    return;
+                }
+                let message = '';
+                if(e.message){
+                    message += e.message;
+                }
+                if (e.exception) {
+                    message += ' --- ' + e.exception;
+                }
+                this.throw(500, message);
+                return;
+
             }
 
         } finally {
