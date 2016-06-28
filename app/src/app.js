@@ -44,6 +44,7 @@ var onDbReady = function(err) {
 
     var app = koa();
     app.use(cors({
+      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
       credentials: true,
       origin: function(request) {
         if (request.headers.origin) {
