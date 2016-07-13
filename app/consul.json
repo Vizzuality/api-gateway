@@ -1,17 +1,18 @@
 [
+
     {
-        "name": "gfw-geostore-api",
+        "name": "rw-dataset",
         "host": "192.168.99.100",
-        "port": 3100
+        "port": 3000
     },
     {
-        "name": "gfw-forma-api",
+        "name": "rw-adapter-json",
         "host": "192.168.99.100",
-        "port": 3600
+        "port": 3010
     },
     {
-        "name": "rw-adapter-csv",
+        "name": "converter",
         "host": "192.168.99.100",
-        "port": 4000
+        "port": 4100
     }
 ]

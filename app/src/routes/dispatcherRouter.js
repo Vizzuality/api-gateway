@@ -57,7 +57,7 @@ class DispatcherRouter {
             }
         }
         try {
-            logger.debug('Send request');
+            logger.debug('Send request', requests);
             requests = requests.map(function(requestConfig) {
                 return restCo(requestConfig);
             });

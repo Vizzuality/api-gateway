@@ -35,11 +35,8 @@ var API = (function() {
     });
 
     var failAuth = function*() {
-        this.body = yield this.render('after-auth', {
-            state: 'fail',
-            user: null
-        });
-        this.codeStatus = 200;
+        logger.error('Not authenticated');
+        this.throw(401, 'Not authenticated');
     };
 
     var checkLogged = function*() {

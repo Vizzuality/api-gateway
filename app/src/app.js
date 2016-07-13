@@ -21,6 +21,8 @@ var MongoStore = require('koa-generic-session-mongo');
 var koaBody = require('koa-body')({
     multipart: true,
     jsonLimit: '50mb',
+    formLimit: '50mb',
+    textLimit: '50mb',
     formidable: {
         uploadDir: '/tmp',
         onFileBegin: function(name, file) {
@@ -43,6 +45,11 @@ var onDbReady = function(err) {
 
 
     var app = koa();
+    app.use(function*(next){
+        logger.debug(this.request.path);
+        logger.debug('headers', this.request.headers);
+        yield next;
+    });
     app.use(cors({
       credentials: true,
       origin: function(request) {
@@ -108,7 +115,7 @@ var onDbReady = function(err) {
             if (process.env.NODE_ENV === 'prod' && this.status === 500) {
                 this.body = 'Unexpected error';
             }
-            this.body = ErrorSerializer.serializeError(this.status, err.message);            
+            this.body = ErrorSerializer.serializeError(this.status, err.message);
         }
 
     });

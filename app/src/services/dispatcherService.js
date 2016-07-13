@@ -153,7 +153,7 @@ class DispatcherService {
                 }
 
                 if (headers) {
-                  config.headers = headers;
+                  configRequest.headers = headers;
                 }
 
                 if (endpoint.data ) {
