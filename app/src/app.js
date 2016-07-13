@@ -51,6 +51,7 @@ var onDbReady = function(err) {
         yield next;
     });
     app.use(cors({
+      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
       credentials: true,
       origin: function(request) {
         if (request.headers.origin) {
