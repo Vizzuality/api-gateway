@@ -69,7 +69,7 @@ class DispatcherRouter {
             this.response.type = result[0].response.headers['content-type'];
         } catch (e) {
             logger.error('Error to request', e);
-            if(e.errors && e.errors.length > 0 && e.errors[0].status >= 400 && e.errors[0].status < 500){
+            if(e.errors && e.errors.length > 0 && e.errors[0].status >= 400 && (e.errors[0].status < 500 || process.env.NODE_ENV !== 'prod')){
                 this.status = e.errors[0].status;
                 this.body = e;
             } else {
