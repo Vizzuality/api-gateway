@@ -47,7 +47,7 @@ class DispatcherService {
         let request = restCo(requestConfig);
 
         try {
-            let result = yield requests;
+            let result = yield request;
             if (result.response.statusCode === 200) {
                 logger.debug('Response 200');
                 let data = result.body;
