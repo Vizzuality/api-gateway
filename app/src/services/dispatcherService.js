@@ -42,17 +42,15 @@ class DispatcherService {
             keysUrlDataset[filter.paramProvider] = keys[filter.paramProvider];
         }
         let urlDataset = toPath(keys);
-        let requests = yield DispatcherService.getRequests(urlDataset, 'GET');
+        let requestConfig = yield DispatcherService.getRequest(urlDataset, 'GET');
         logger.debug('request obtained ', requests);
-        requests = requests.map(function(requestConfig, i) {
-            return restCo(requestConfig);
-        });
+        let request = restCo(requestConfig);
 
         try {
             let result = yield requests;
-            if (result[0].response.statusCode === 200) {
+            if (result.response.statusCode === 200) {
                 logger.debug('Response 200');
-                let data = result[0].body;
+                let data = result.body;
                 let filters = {};
                 for (let i = 0, length = filter.filters.length; i < length; i++) {
                     filters[filter.filters[i]] = data[filter.filters[i]];
