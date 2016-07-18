@@ -43,7 +43,7 @@ class DispatcherService {
         }
         let urlDataset = toPath(keys);
         let requestConfig = yield DispatcherService.getRequest(urlDataset, 'GET');
-        logger.debug('request obtained ', requests);
+        logger.debug('request obtained ', requestConfig);
         let request = restCo(requestConfig);
 
         try {
