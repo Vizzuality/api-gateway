@@ -75,7 +75,7 @@ class DispatcherService {
         }
     }
 
-    static * getRequests(sourceUrl, sourceMethod, body, headers, queryParams, files, userAuth) {
+    static * getRequest(sourceUrl, sourceMethod, body, headers, queryParams, files, userAuth) {
         logger.debug('Obtaining config request to url %s and queryParams %s', sourceUrl, queryParams);
         var parsedUrl = url.parse(sourceUrl);
         logger.debug('Checking if exist in filters the url %s', sourceUrl);
@@ -100,7 +100,7 @@ class DispatcherService {
             }
             logger.debug('dataFilters', dataFilters);
         }
-        var requests = [];
+        var requests = null;
 
         let findFilters = {
             $where: 'this.urlRegex && this.urlRegex.test(\'' + parsedUrl.pathname + '\')',
@@ -114,86 +114,88 @@ class DispatcherService {
         var service = yield Service.findOne(findFilters);
         logger.debug('Service obtained: ', service);
         let configRequest = null;
-        if(service){
+        if (service) {
             logger.info('Checking if the request is authenticated');
-            if(service.authenticated && !userAuth){
+            if (service.authenticated && !userAuth) {
                 throw new NotAuthorized(sourceUrl + ': login required');
             }
         }
 
-        if (service && service.endpoints) {
-            for (let i = 0, length = service.endpoints.length; i < length; i++) {
-                let endpoint = service.endpoints[i];
-                logger.info('Dispathing request from %s to %s%s private endpoint. Type: %s', parsedUrl.pathname, endpoint.baseUrl, endpoint.path, endpoint.type);
+        if (service && service.endpoint) {
 
-                let url = yield DispatcherService.buildUrl(parsedUrl.pathname, endpoint.path, service);
-                configRequest = {
-                    uri: endpoint.baseUrl + url,
-                    method: endpoint.method
-                };
+            let endpoint = service.endpoint;
+            logger.debug('Endpoint', endpoint);
+            logger.info('Dispathing request from %s to %s%s private endpoint. Type: %s', parsedUrl.pathname, endpoint.baseUrl, endpoint.path, endpoint.type);
 
-                if (queryParams) {
-                    configRequest.uri = configRequest.uri + queryParams;
+            let url = yield DispatcherService.buildUrl(parsedUrl.pathname, endpoint.path, service);
+            configRequest = {
+                uri: endpoint.baseUrl + url,
+                method: endpoint.method,
+                binary: service.binary
+            };
+
+            if (queryParams) {
+                configRequest.uri = configRequest.uri + queryParams;
+            }
+
+            logger.debug('Create request to %s', configRequest.uri);
+            if (endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT') {
+                logger.debug('Method is %s. Adding body', configRequest.method);
+                configRequest.data = body;
+            }
+
+            if (files) {
+                logger.debug('Adding files');
+                let formData = {};
+                for (let key in files) {
+                    formData[key] = rest.file(files[key].path);
                 }
+                configRequest.data = Object.assign(configRequest.data || {}, formData);
+                configRequest.multipart = true;
+            }
 
-                logger.debug('Create request to %s', configRequest.uri);
-                if (endpoint.method === 'POST' || endpoint.method === 'PATCH' || endpoint.method === 'PUT') {
-                    logger.debug('Method is %s. Adding body', configRequest.method);
-                    configRequest.data = body;
-                }
+            if (headers) {
+                config.headers = headers;
+            }
 
-                if (files) {
-                    logger.debug('Adding files');
-                    let formData = {};
-                    for (let key in files) {
-                        formData[key] = rest.file(files[key].path);
-                    }
-                    configRequest.data = Object.assign(configRequest.data || {}, formData);
-                    configRequest.multipart = true;
-                }
+            if (endpoint.data) {
+                logger.debug('Obtaining data to endpoints');
+                for (let k = 0, lengthData = endpoint.data.length; k < lengthData; k++) {
 
-                if (headers) {
-                  configRequest.headers = headers;
-                }
-
-                if (endpoint.data ) {
-                    logger.debug('Obtaining data to endpoints');
-                    for (let k = 0, lengthData = endpoint.data.length; k < lengthData; k++) {
-
-                        if(endpoint.data[k] === 'loggedUser'){
-                            configRequest.data[endpoint.data[k]] = userAuth;
-                            if(!userAuth){
-                                logger.warn('User not logged. Add undefined in userLogged body parameter');
-                            }
-                        } else {
-                            if (!dataFilters || !dataFilters[endpoint.data[k]]) {
-                                //TODO obtain data
-                            }
-                            if(dataFilters){
-                                configRequest.data[endpoint.data[k]] = dataFilters[endpoint.data[k]];
-                            }
+                    if (endpoint.data[k] === 'loggedUser') {
+                        configRequest.data[endpoint.data[k]] = userAuth;
+                        if (!userAuth) {
+                            logger.warn('User not logged. Add undefined in userLogged body parameter');
+                        }
+                    } else {
+                        if (!dataFilters || !dataFilters[endpoint.data[k]]) {
+                            //TODO obtain data
+                        }
+                        if (dataFilters) {
+                            configRequest.data[endpoint.data[k]] = dataFilters[endpoint.data[k]];
                         }
                     }
-                    logger.debug('Final request', configRequest);
                 }
-
-                //if is authenticated add user in the body
-                var methodsWithBody = ['POST', 'PATCH', 'PUT'];
-                logger.info('user auth', userAuth);
-                if (userAuth !== undefined) {
-                  if (methodsWithBody.indexOf(endpoint.method) > -1) {
-                      logger.debug('Adding user in the body because url is authenticated');
-                      configRequest.data.loggedUser = userAuth;
-                  } else {
-                      logger.debug('Adding user in the query string because url is authenticated');
-                      configRequest.query = configRequest.query || {};
-                      configRequest.query.loggedUser = userAuth;
-                  }
-                }
-
-                requests.push(configRequest);
+                logger.debug('Final request', configRequest);
             }
-            return requests;
+
+            //if is authenticated add user in the body
+            var methodsWithBody = ['POST', 'PATCH', 'PUT'];
+            logger.info('user auth', userAuth);
+            if (userAuth !== undefined) {
+                if (methodsWithBody.indexOf(endpoint.method) > -1) {
+                    logger.debug('Adding user in the body because url is authenticated');
+                    configRequest.data.loggedUser = userAuth;
+                } else {
+                    logger.debug('Adding user in the query string because url is authenticated');
+                    configRequest.query = configRequest.query || {};
+                    configRequest.query.loggedUser = userAuth;
+                }
+            }
+
+
+
+            return configRequest;
         } else  {
             logger.error('Endpoint not found');
             throw new ServiceNotFound('Not found services to url:' + sourceUrl);

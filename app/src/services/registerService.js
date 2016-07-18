@@ -21,6 +21,7 @@ class RegisterService {
 
         let keys = [];
         let regex = pathToRegexp(data.url, keys);
+
         if (keys && keys.length > 0) {
             keys = keys.map(function(key, i) {
                 return key.name;
@@ -33,8 +34,9 @@ class RegisterService {
             urlRegex: regex,
             authenticated: data.authenticated !== undefined ? data.authenticated : false,
             keys: keys,
+            binary: data.binary || false,
             method: data.method,
-            endpoints: data.endpoints,
+            endpoint: data.endpoints[0],
             filters: data.filters
         }).save();
 
@@ -117,6 +119,7 @@ class RegisterService {
                     method: data.urls[i].method,
                     endpoints: data.urls[i].endpoints,
                     authenticated: data.urls[i].authenticated,
+                    binary: data.urls[i].binary,
                     filters: data.urls[i].filters,
                     dataProvider: data.urls[i].dataProvider,
                     paramProvider: data.urls[i].paramProvider

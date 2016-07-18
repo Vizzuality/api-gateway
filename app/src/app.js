@@ -45,11 +45,7 @@ var onDbReady = function(err) {
 
 
     var app = koa();
-    app.use(function*(next){
-        logger.debug(this.request.path);
-        logger.debug('headers', this.request.headers);
-        yield next;
-    });
+
     app.use(cors({
       allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
       credentials: true,
@@ -67,10 +63,6 @@ var onDbReady = function(err) {
       }
     }));
 
-    //if dev environment then load koa-logger
-    if (process.env.NODE_ENV === 'dev') {
-        app.use(require('koa-logger')());
-    }
     //config sessions in mongo
     if(process.env.AUTH_ENABLED === 'true'){
         logger.info('OAUTH Enable');

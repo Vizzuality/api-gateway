@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var Router = require('koa-router');
 var logger = require('logger');
-var request = require('co-request');
+var request = require('request');
 var DispatcherService = require('services/dispatcherService');
 var ServiceNotFound = require('errors/serviceNotFound');
 var NotAuthorized = require('errors/notAuthorized');
@@ -38,9 +38,9 @@ class DispatcherRouter {
 
     static * dispatch() {
         logger.info('Dispatch url', this.request.url, ' and method ', this.request.method);
-        let requests = null;
+        let requestConfig = null;
         try {
-            requests = yield DispatcherService.getRequests(this.request.path, this.request.method, this.request.body, this.request.headers, this.request.search, this.request.body.files, (this.req.user || this.req.microservice));
+            requestConfig = yield DispatcherService.getRequest(this.request.path, this.request.method, this.request.body, this.request.headers, this.request.search, this.request.body.files, (this.req.user || this.req.microservice));
         } catch (e) {
             logger.error(e);
             if (e instanceof ServiceNotFound) {
@@ -57,16 +57,19 @@ class DispatcherRouter {
             }
         }
         try {
-            logger.debug('Send request', requests);
-            requests = requests.map(function(requestConfig) {
-                return restCo(requestConfig);
-            });
-            let result = yield requests;
+            logger.debug('Send request', requestConfig);
+            if(!requestConfig.binary){
+                let request = restCo(requestConfig);
+                let result = yield request;
 
-            this.set(getHeadersFromResponse(result[0].response));
-            this.status = result[0].response.statusCode;
-            this.body = result[0].body;
-            this.response.type = result[0].response.headers['content-type'];
+                this.set(getHeadersFromResponse(result.response));
+                this.status = result.response.statusCode;
+                this.body = result.body;
+                this.response.type = result.response.headers['content-type'];
+            } else {
+                logger.debug('Is binary');
+                this.body = request(requestConfig);
+            }
         } catch (e) {
             logger.error('Error to request', e);
             if(e.errors && e.errors.length > 0 && e.errors[0].status >= 400 && (e.errors[0].status < 500 || process.env.NODE_ENV !== 'prod')){
