@@ -21,7 +21,8 @@ var ALLOWED_HEADERS = [
   'access-control-allow-origin',
   'access-control-allow-headers',
   'cache-control',
-  'charset'
+  'charset',
+  'location'
 ];
 
 var getHeadersFromResponse = function(response) {
@@ -59,6 +60,7 @@ class DispatcherRouter {
         try {
             logger.debug('Send request', requestConfig);
             if(!requestConfig.binary){
+                requestConfig.followRedirects = false;
                 let request = restCo(requestConfig);
                 let result = yield request;
 

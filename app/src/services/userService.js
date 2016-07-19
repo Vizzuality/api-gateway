@@ -12,16 +12,15 @@ class UserService {
     static * createOrGetUser(data){
         try{
             logger.info('Create or getter user from management user microservice');
-            let requests = yield DispatcherService.getRequests(CREATE_OR_GET, 'POST', data, null, null, null, {id: 'api-gateway'});
-            logger.debug('Requests obtained', requests);
-            if(requests){
+            let requestConfig = yield DispatcherService.getRequest(CREATE_OR_GET, 'POST', data, null, null, null, {id: 'api-gateway'});
+            logger.debug('Requests obtained', requestConfig);
+            if(requestConfig){
                 logger.debug('Send request');
-                requests = requests.map(function(requestConfig) {
-                    return restCo(requestConfig);
-                });
+                var requests = restCo(requestConfig);
+
                 let result = yield requests;
-                let status = result[0].response.statusCode;
-                let user = result[0].body;
+                let status = result.response.statusCode;
+                let user = result.body;
                 return user;
             } else {
                 throw new ServiceNotFound('User service not found');
@@ -36,16 +35,14 @@ class UserService {
     static * getUserById(id){
         try{
             logger.info('Get user by id %s from management user microservice.', id);
-            let requests = yield DispatcherService.getRequests(GET_BY_ID + id, 'GET');
-            logger.debug('Requests obtained', requests);
-            if(requests){
+            let requestConfig = yield DispatcherService.getRequest(GET_BY_ID + id, 'GET');
+            logger.debug('Requests obtained', requestConfig);
+            if(requestConfig){
                 logger.debug('Send request');
-                requests = requests.map(function(requestConfig) {
-                    return restCo(requestConfig);
-                });
+                var requests = restCo(requestConfig);
                 let result = yield requests;
-                let status = result[0].response.statusCode;
-                let user = result[0].body;
+                let status = result.response.statusCode;
+                let user = result.body;
                 return user;
             } else {
                 throw new ServiceNotFound('User service not found');

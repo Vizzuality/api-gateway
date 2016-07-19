@@ -11,8 +11,13 @@
         "port": 3600
     },
     {
-        "name": "urthecast",
+        "name": "viirs",
         "host": "192.168.99.100",
-        "port": 4200
+        "port": 3700
+    },
+    {
+        "name": "users",
+        "host": "192.168.99.100",
+        "port": 3400
     }
 ]
