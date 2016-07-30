@@ -67,8 +67,8 @@ class RegisterRouter {
 }
 
 router.get('/', RegisterRouter.getServices);
-router.delete('/all', RegisterRouter.unregisterAll);
-router.delete('/:id', RegisterRouter.unregister);
+// router.delete('/all', RegisterRouter.unregisterAll);
+// router.delete('/:id', RegisterRouter.unregister);
 
 if(process.env.NODE_ENV === 'dev'){
     logger.info('Registering refresh endpoint');

@@ -66,10 +66,14 @@ class RegisterService {
         yield Microservice.remove({
             id: data.id
         });
+        if(data.tags){
+            logger.debug('Contain tags');
+        }
 
         var microservice = yield new Microservice({
             id: data.id,
             swagger: data.swagger,
+            tags: data.tags,
             token: token || 'invalid'
         }).save();
         return microservice;

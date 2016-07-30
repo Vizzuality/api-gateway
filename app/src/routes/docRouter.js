@@ -37,7 +37,13 @@ class DocRouter {
     static * getDoc(){
         logger.info('Obtaining doc');
         let apiGatewayDoc = yield Microservice.findOne({id:'api-gateway'});
-        let microservices = yield Microservice.find({id: {$ne: 'api-gateway'}});
+        let filters = {id: {$ne: 'api-gateway'}};
+        if(this.query.tag){
+            logger.debug('Get by tag ', this.query.tag);
+            filters.tags = { $in: [this.query.tag]};
+            logger.debug('filters ', filters);
+        }
+        let microservices = yield Microservice.find(filters);
         this.body = DocRouter.mergeDoc(apiGatewayDoc, microservices);
     }
 
