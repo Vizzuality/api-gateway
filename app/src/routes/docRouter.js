@@ -15,7 +15,7 @@ class DocRouter {
 
         try{
             var swagger = Object.assign({}, principal.swagger);
-
+            swagger.host = config.get('server.publicUrl');
             if(services){
                 for(let i = 0, length = services.length; i < length; i++){
                     if(services[i].swagger){
