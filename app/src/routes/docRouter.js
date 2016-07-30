@@ -4,6 +4,7 @@ var Router = require('koa-router');
 var logger = require('logger');
 var Microservice = require('models/microservice');
 var YAML = require('yaml-js');
+var config = require('config');
 
 var router = new Router({
 });
