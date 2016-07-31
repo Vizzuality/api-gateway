@@ -40,7 +40,7 @@ There are two ways to discover microservices:
 
 In **local**, we need add the microservice configuration (name, ip and port) to the [consul.json](app/consul.json). In this way, each time that the api-gateway refresh your microservices registered, he consult the file and call /info endpoint of all microservices that are configured in the file
 
-When the api-gateway reads each location of the microservices, it makes a request to the endpoint /info of each microservice (see [microservice-client](https://github.com/Vizzuality/microservice-client#readme) and [microservice-node-skeleton](https://github.com/Vizzuality/microservice-node-skeleton#configuration-api-configuration)) to obtain the microservice's configuration (urls, swagger, etc).
+When the api-gateway reads each location of the microservices, it makes a request to the endpoint /info of each microservice (see [microservice-client](https://github.com/Vizzuality/microservice-client#readme) and [microservice-node-skeleton](https://github.com/Vizzuality/microservice-node-skeleton#user-content-api-configuration)) to obtain the microservice's configuration (urls, swagger, etc).
 
 Example result request:
 
