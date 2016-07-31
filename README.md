@@ -26,7 +26,7 @@ to the services based on the given path, and also routes requests to the
 old Python API.
 
 * If a given path matches existing microservices, it is directed there.
-* If a given path does not match any microservices, it is proxied to the old API.
+
 
 The [Dispatcher](app/src/routes/dispatcherRouter.js) middleware and
 [DispatcherService](app/src/services/dispatcherService.js) are
@@ -35,9 +35,12 @@ responsible for determining where to route requests.
 ### How are microservices discovered?
 
 The services are responsible for registering themselves with the gateway
-and making it aware that they are available to receive requests. There
-exists a [services REST API](docs/service_registry.md) that is used for
-this purpose.
+and making it aware that they are available to receive requests.
+There are two ways to discover microservices:
+* A [services REST API](docs/service_registry.md)
+* A [Worker](docs/worker.md) that it is watching a consul-template file
+
+In *local*, we need add the microservice configuration (name, ip and port) to the [consul.json](app/consul.json). In this way, each time that the api-gateway refresh your microservices registered, he consult the file and call /info endpoint of all microservices that are configured in the file
 
 ## Requirements
 
@@ -60,7 +63,7 @@ If you are going to use containers, you will need:
 
 - [Docker](https://www.docker.com/)
 - [docker-compose](https://docs.docker.com/compose/)
-- Create folders (to save dbs): /var/docker/data/redisdb and /var/docker/data/mongodb 
+- Create folders (to save dbs): /var/docker/data/redisdb and /var/docker/data/mongodb
 
 ## Executing
 
