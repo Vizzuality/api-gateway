@@ -12,11 +12,17 @@ var router = new Router({
 
 class DocRouter {
 
-    static mergeDoc(principal, services, host){
+    static mergeDoc(principal, services, host, title, description){
 
         try{
             var swagger = Object.assign({}, principal.swagger);
             swagger.host = host;
+            if(title){
+                swagger.info.title = title;
+            }
+            if(description){
+                swagger.info.description = description;
+            }
             if(services){
                 for(let i = 0, length = services.length; i < length; i++){
                     if(services[i].swagger){
@@ -39,14 +45,21 @@ class DocRouter {
         logger.info('Obtaining doc');
         let apiGatewayDoc = yield Microservice.findOne({id:'api-gateway'});
         let filters = {id: {$ne: 'api-gateway'}};
+        let title = null;
+        let description = null;
         if(this.query.tag){
-            logger.debug('Get by tag ', this.query.tag);
             filters.tags = { $in: [this.query.tag]};
-            logger.debug('filters ', filters);
+            if(this.query.tag === 'gfw'){
+                title = 'Global Forest Watch API';
+                description = 'API Documentation of Global Forest Watch project';
+            } else if(this.query.tag === 'rw'){
+                title = 'Resource Watch API';
+                description = 'API Documentation of Resource Watch project';
+            }
         }
         let microservices = yield Microservice.find(filters);
         let targetHost = config.get('server.publicUrl').replace('http://', '').replace('https://', '');
-        this.body = DocRouter.mergeDoc(apiGatewayDoc, microservices, (this.query.host || targetHost));
+        this.body = DocRouter.mergeDoc(apiGatewayDoc, microservices, (this.query.host || targetHost), title, description);
     }
 
 }
