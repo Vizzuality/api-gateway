@@ -31,6 +31,7 @@
     "koa-bodyparser": "2.0.1",
     "koa-generic-session": "1.10.2",
     "koa-generic-session-mongo": "0.2.5",
+    "koa-jwt": "^1.2.0",
     "koa-logger": "1.3.0",
     "koa-mount": "1.3.0",
     "koa-passport": "1.3.0",

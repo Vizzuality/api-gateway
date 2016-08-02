@@ -27,6 +27,7 @@
         "cookie": {
             "domain": "globalforestwatch.dev"
         },
-        "sessionKey": "globalforestwatch-key"
+        "sessionKey": "globalforestwatch-key",
+        "jwtSecret": ""
     }
 }

@@ -4,6 +4,7 @@
         "port": "MONGO_PORT_27017_TCP_PORT"
     },
     "server":{
-        "internalUrl": "INTERNAL_URL"
+        "internalUrl": "INTERNAL_URL",
+        "jwtSecret": "JWT_SECRET"
     }
 }

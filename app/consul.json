@@ -6,6 +6,21 @@
         "port": 3100
     },
     {
+        "name": "gfw-geostore",
+        "host": "192.168.99.100",
+        "port": 3000
+    },
+    {
+        "name": "gfw-csv",
+        "host": "192.168.99.100",
+        "port": 4000
+    },
+    {
+        "name": "converter",
+        "host": "192.168.99.100",
+        "port": 4100
+    },
+    {
         "name": "rw-adapter-csv",
         "host": "192.168.99.100",
         "port": 3600
@@ -29,5 +44,10 @@
         "name": "mail",
         "host": "192.168.99.100",
         "port": 3500
+    },
+    {
+        "name": "dataset",
+        "host": "192.168.99.100",
+        "port": 5000
     }
 ]

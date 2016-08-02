@@ -121,7 +121,7 @@ var onDbReady = function(err) {
     }
 
     // add filter to microservice authentication
-    app.use(require('services/authMicroService')());
+    require('services/authMicroService')(app);
 
     //load endpoints and load validate only for /gateway
     app.use(koaBody);

@@ -8,6 +8,7 @@ develop:
   environment:
     NODE_ENV: dev
     AUTH_ENABLED: 'true'
+    JWT_SECRET: other
   command: develop
   links:
     - mongo

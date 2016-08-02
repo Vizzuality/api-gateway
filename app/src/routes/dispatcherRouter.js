@@ -38,10 +38,11 @@ var getHeadersFromResponse = function(response) {
 class DispatcherRouter {
 
     static * dispatch() {
+
         logger.info('Dispatch url', this.request.url, ' and method ', this.request.method);
         let requestConfig = null;
         try {
-            requestConfig = yield DispatcherService.getRequest(this.request.path, this.request.method, this.request.body, this.request.headers, this.request.search, this.request.body.files, (this.req.user || this.req.microservice));
+            requestConfig = yield DispatcherService.getRequest(this.request.path, this.request.method, this.request.body, this.request.headers, this.request.search, this.request.body.files, (this.req.user || this.req.microservice || this.state.user));
         } catch (e) {
             logger.error(e);
             if (e instanceof ServiceNotFound) {
