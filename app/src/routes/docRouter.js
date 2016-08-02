@@ -12,11 +12,11 @@ var router = new Router({
 
 class DocRouter {
 
-    static mergeDoc(principal, services){
+    static mergeDoc(principal, services, host){
 
         try{
             var swagger = Object.assign({}, principal.swagger);
-            swagger.host = config.get('server.publicUrl').replace('http://', '').replace('https://', '');
+            swagger.host = host;
             if(services){
                 for(let i = 0, length = services.length; i < length; i++){
                     if(services[i].swagger){
@@ -45,7 +45,8 @@ class DocRouter {
             logger.debug('filters ', filters);
         }
         let microservices = yield Microservice.find(filters);
-        this.body = DocRouter.mergeDoc(apiGatewayDoc, microservices);
+        let targetHost = config.get('server.publicUrl').replace('http://', '').replace('https://', '');
+        this.body = DocRouter.mergeDoc(apiGatewayDoc, microservices, (this.query.host || targetHost));
     }
 
 }

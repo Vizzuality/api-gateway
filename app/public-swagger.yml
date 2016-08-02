@@ -12,18 +12,11 @@ produces:
   - application/vnd.api+json
   - application/json
 
-securityDefinitions:
-  basic_auth:
-    type: basic
-    description: to read/modify any data related to services
-
 paths:
   /gateway/service:
     get:
       description: Return all urls registered by the services
       operationId: getServices
-      security:
-        - basic_auth: []
       tags:
         - Services
       produces:
