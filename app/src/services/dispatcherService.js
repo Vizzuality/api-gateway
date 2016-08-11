@@ -10,7 +10,13 @@ var ServiceNotFound = require('errors/serviceNotFound');
 var NotAuthorized = require('errors/notAuthorized');
 var rest = require('restler');
 var restCo = require('lib/restCo');
+var JSONAPIDeserializer = require('jsonapi-serializer').Deserializer;
 
+var deserializer = function(obj) {
+    return function(callback) {
+        new JSONAPIDeserializer({keyForAttribute: 'camelCase'}).deserialize(obj, callback);
+    };
+};
 
 class DispatcherService {
 
@@ -50,7 +56,7 @@ class DispatcherService {
             let result = yield request;
             if (result.response.statusCode === 200) {
                 logger.debug('Response 200');
-                let data = result.body;
+                let data = yield deserializer(result.body);
                 let filters = {};
                 for (let i = 0, length = filter.filters.length; i < length; i++) {
                     filters[filter.filters[i]] = data[filter.filters[i]];
