@@ -14,7 +14,8 @@ var JSONAPIDeserializer = require('jsonapi-serializer').Deserializer;
 
 var deserializer = function(obj) {
     return function(callback) {
-        new JSONAPIDeserializer({keyForAttribute: 'camelCase'}).deserialize(obj, callback);
+        new JSONAPIDeserializer({keyForAttribute: 'snake_case'}).deserialize(obj, callback);
+        // new JSONAPIDeserializer().deserialize(obj, callback);
     };
 };
 
