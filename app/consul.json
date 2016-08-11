@@ -11,9 +11,19 @@
         "port": 3000
     },
     {
+        "name": "rw_adapter_json",
+        "host": "192.168.99.100",
+        "port": 3010
+    },
+    {
         "name": "gfw-csv",
         "host": "192.168.99.100",
         "port": 4000
+    },
+    {
+        "name": "viirs",
+        "host": "192.168.99.100",
+        "port": 3900
     },
     {
         "name": "converter",

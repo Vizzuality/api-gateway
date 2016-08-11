@@ -64,7 +64,7 @@ class DispatcherService {
                 let response = {
                     filters: filters
                 };
-                response[filter.dataProvider] = data;
+                response[filter.dataProvider] = result.body;
                 return response;
             }
             throw new ServiceNotFound('Not found services to url:' + url);
