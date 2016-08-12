@@ -57,7 +57,7 @@ class DispatcherService {
             let result = yield request;
             if (result.response.statusCode === 200) {
                 logger.debug('Response 200');
-                let data = yield deserializer(result.body);
+                let data = result.body; //yield deserializer(result.body);
                 let filters = {};
                 for (let i = 0, length = filter.filters.length; i < length; i++) {
                     filters[filter.filters[i]] = data[filter.filters[i]];
