@@ -75,7 +75,7 @@ class DispatcherRouter {
             }
         } catch (e) {
             logger.error('Error to request', e);
-            if(e.errors && e.errors.length > 0 && e.errors[0].status >= 400 && e.errors[0].status =< 500 ){
+            if(e.errors && e.errors.length > 0 && e.errors[0].status >= 400 && e.errors[0].status <= 500 ){
                 this.status = e.errors[0].status;
                 this.body = e;
             } else {
