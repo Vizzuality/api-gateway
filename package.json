@@ -19,11 +19,13 @@
     "node": ">5.7.0"
   },
   "dependencies": {
+    "bluebird": "^3.4.6",
     "bunyan": "1.7.1",
     "co": "4.6.0",
     "co-request": "1.0.0",
     "config": "1.19.0",
     "jsonapi-serializer": "^2.1.1",
+    "jsonwebtoken": "^7.1.9",
     "kcors": "1.2.1",
     "koa": "1.2.0",
     "koa-basic-auth": "1.1.2",

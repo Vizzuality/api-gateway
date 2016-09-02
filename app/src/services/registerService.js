@@ -8,6 +8,8 @@ var Microservice = require('models/microservice');
 var restCo = require('lib/restCo');
 var crypto = require('crypto');
 var config = require('config');
+const promise = require('bluebird');
+const JWT = promise.promisifyAll(require('jsonwebtoken'));
 
 class RegisterService {
 
@@ -154,7 +156,7 @@ class RegisterService {
                 try{
                     logger.debug('Doing request to ' + microservices[i].host + ':' + microservices[i].port);
                     let url = 'http://' + microservices[i].host + ':' + microservices[i].port;
-                    let token = crypto.randomBytes(20).toString('hex');
+                    const token = JWT.sign(microservices[i], config.get('server.jwtSecret'), {});
                     let result = yield restCo({
                         uri: url + '/info?token=' +token + '&url='+config.get('server.internalUrl'),
                         method: 'GET'
