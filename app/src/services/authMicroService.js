@@ -26,5 +26,10 @@ module.exports = function(app) {
         secret: config.get('server.jwtSecret'),
         passthrough: true,
     }));
+    app.use(function*(next){
+       logger.info('User', this.state);
+       logger.info('Headers', this.headers);
+       yield next;
+    });
 
 };
