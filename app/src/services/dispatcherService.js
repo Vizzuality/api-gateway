@@ -14,8 +14,11 @@ var JSONAPIDeserializer = require('jsonapi-serializer').Deserializer;
 
 var deserializer = function(obj) {
     return function(callback) {
-        new JSONAPIDeserializer({keyForAttribute: 'snake_case'}).deserialize(obj, callback);
-        // new JSONAPIDeserializer().deserialize(obj, callback);
+        if(obj && obj.data) {
+            new JSONAPIDeserializer({keyForAttribute: 'camelCase'}).deserialize(obj, callback);
+        } else {
+            callback(null, obj);
+        }
     };
 };
 
@@ -57,7 +60,7 @@ class DispatcherService {
             let result = yield request;
             if (result.response.statusCode === 200) {
                 logger.debug('Response 200');
-                let data = result.body; //yield deserializer(result.body);
+                let data = yield deserializer(result.body);
                 let filters = {};
                 for (let i = 0, length = filter.filters.length; i < length; i++) {
                     filters[filter.filters[i]] = data[filter.filters[i]];
