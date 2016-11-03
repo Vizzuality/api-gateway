@@ -10,5 +10,8 @@
         "cookie":{
             "domain": "api-gateway-staging.herokuapp.com"
         }
+    },
+    "providers": {
+        "dataset": "/dataset/:dataset"
     }
 }

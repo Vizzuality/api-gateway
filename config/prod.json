@@ -11,5 +11,8 @@
         "cookie":{
             "domain": "amazonaws.com"
         }
+    },
+    "providers": {
+        "dataset": "/datasets/:dataset"
     }
 }
